@@ -105,21 +105,42 @@ class PortfolioRigorousStudy:
     # 1. IS参数优化（组合模式）
     # ============================================================
     def optimize_parameters_is(self, symbols: List[str]) -> Dict:
-        """在IS数据上随机搜索最优参数（组合模式）"""
-        print(f"\n[IS组合参数优化]")
-        print(f"  品种: {', '.join(symbols)}")
-        print(f"  时间: {self.config.is_start} ~ {self.config.is_end}")
+        """在IS数据上随机搜索最优参数（组合模式）- 带缓存"""
+        cache_key = f"is_cache_{'_'.join(sorted(symbols))}_{self.config.is_start}_{self.config.is_end}_{self.config.random_search_iterations}.json"
+        cache_path = os.path.join(self.config.output_dir, cache_key)
         
-        grid = self.config.param_grid
-        param_names = list(grid.keys())
-        param_values = list(grid.values())
+        if os.path.exists(cache_path):
+            print(f"\n[IS组合参数优化] 使用缓存结果: {cache_key}")
+            with open(cache_path, 'r', encoding='utf-8') as f:
+                cached = json.load(f)
+            # 从缓存恢复
+            all_results = cached['all_results']
+            print(f"  已缓存 {len(all_results)} 次迭代结果")
+            # 仍需要跑完剩余迭代
+            grid = self.config.param_grid
+            param_names = list(grid.keys())
+            param_values = list(grid.values())
+            n_iterations = self.config.random_search_iterations
+            start_i = len(all_results)
+            if start_i >= n_iterations:
+                print(f"  缓存已完整，跳过IS优化")
+            else:
+                print(f"  从第 {start_i+1} 次继续...")
+        else:
+            all_results = []
+            print(f"\n[IS组合参数优化]")
+            print(f"  品种: {', '.join(symbols)}")
+            print(f"  时间: {self.config.is_start} ~ {self.config.is_end}")
+            
+            grid = self.config.param_grid
+            param_names = list(grid.keys())
+            param_values = list(grid.values())
+            
+            n_iterations = self.config.random_search_iterations
+            print(f"  随机搜索: {n_iterations}次迭代")
+            start_i = 0
         
-        n_iterations = self.config.random_search_iterations
-        print(f"  随机搜索: {n_iterations}次迭代")
-        
-        all_results = []
-        
-        for i in range(n_iterations):
+        for i in range(start_i, n_iterations):
             sampled_params = {
                 name: values[np.random.randint(len(values))]
                 for name, values in zip(param_names, param_values)
@@ -158,9 +179,17 @@ class PortfolioRigorousStudy:
             
             if (i + 1) % 20 == 0:
                 print(f"  迭代 {i+1}/{n_iterations}... (有效: {len(all_results)})")
+                # 保存进度缓存
+                with open(cache_path, 'w', encoding='utf-8') as f:
+                    json.dump({'all_results': all_results}, f, ensure_ascii=False, default=str)
+                print(f"  进度已缓存")
         
         if len(all_results) == 0:
             return {'error': '无有效参数组合'}
+        
+        # 最终保存缓存
+        with open(cache_path, 'w', encoding='utf-8') as f:
+            json.dump({'all_results': all_results}, f, ensure_ascii=False, default=str)
         
         all_df = pd.DataFrame(all_results)
         valid = all_df[all_df['max_drawdown_pct'].abs() < 40]
@@ -544,62 +573,39 @@ class PortfolioRigorousStudy:
 # ============================================================
 if __name__ == "__main__":
     print("=" * 80)
-    print("路径二 v5：组合严谨研究")
+    print("路径二 v5：组合严谨研究 - 阶段2全品种")
     print("1万元共享 | 单品种≤50% | 最多3品种")
     print("IS: 2020-2023 | OOS: 2024-2025")
     print("=" * 80)
     
     config = PortfolioResearchConfig(
-        random_search_iterations=50,  # 减少到50次加速
-        mc_simulations=500,            # 蒙特卡罗500次
+        random_search_iterations=50,
+        mc_simulations=500,
     )
     study = PortfolioRigorousStudy(config)
     
-    # 分阶段测试
-    # 阶段1: 快速验证（CS+MA+FB+RM，v2表现较好的品种）
-    symbols_v2_good = ['CS', 'MA', 'FB', 'RM']
+    # 直接跑全品种
+    print(f"\n全品种测试")
+    all_symbols = study.get_eligible_symbols()
+    report2 = study.run_full_study(all_symbols)
     
-    print(f"\n阶段1: 快速验证 - {', '.join(symbols_v2_good)}")
-    report1 = study.run_full_study(symbols_v2_good)
-    
-    if 'error' not in report1:
+    if 'error' not in report2:
         print("\n" + "=" * 80)
-        print("阶段1完成!")
-        is_m = report1['is_result']['best_metrics']
-        oos_m = report1['oos_result'].get('oos_metrics', {})
-        mc = report1['mc_result']
-        robust = report1['robustness']
+        print("全品种研究完成!")
+        is_m2 = report2['is_result']['best_metrics']
+        oos_m2 = report2['oos_result'].get('oos_metrics', {})
+        mc2 = report2['mc_result']
+        robust2 = report2['robustness']
         
-        print(f"品种: {', '.join(report1['symbols'])}")
-        print(f"IS:  年化{is_m['annual_return_pct']:.1f}% | 夏普{is_m['sharpe_ratio']:.2f} | 回撤{is_m['max_drawdown_pct']:.1f}%")
-        if oos_m:
-            print(f"OOS: 年化{oos_m['annual_return_pct']:.1f}% | 夏普{oos_m['sharpe_ratio']:.2f} | 回撤{oos_m['max_drawdown_pct']:.1f}%")
-        print(f"MC_P50: {mc.get('percentiles', {}).get('p50', 0):.1f}%")
-        print(f"破产率: {mc.get('ruin_probability', 0):.1f}%")
-        print(f"夏普衰减: {robust.get('sharpe_decay', 0):.1%}")
-        print(f"过拟合: {'是 ⚠️' if robust.get('is_overfit') else '否 ✅'}")
+        print(f"品种: {len(report2['symbols'])}个")
+        print(f"IS:  年化{is_m2['annual_return_pct']:.1f}% | 夏普{is_m2['sharpe_ratio']:.2f} | 回撤{is_m2['max_drawdown_pct']:.1f}%")
+        if oos_m2:
+            print(f"OOS: 年化{oos_m2['annual_return_pct']:.1f}% | 夏普{oos_m2['sharpe_ratio']:.2f} | 回撤{oos_m2['max_drawdown_pct']:.1f}%")
+            print(f"OOS期末资金: {oos_m2.get('final_capital', 0):,.0f}元")
+        print(f"MC_P50: {mc2.get('percentiles', {}).get('p50', 0):.1f}%")
+        print(f"MC_P5: {mc2.get('percentiles', {}).get('p5', 0):.1f}%")
+        print(f"MC_P95: {mc2.get('percentiles', {}).get('p95', 0):.1f}%")
+        print(f"破产率: {mc2.get('ruin_probability', 0):.1f}%")
+        print(f"夏普衰减: {robust2.get('sharpe_decay', 0):.1%}")
+        print(f"过拟合: {'是 ⚠️' if robust2.get('is_overfit') else '否 ✅'}")
         print("=" * 80)
-    
-    # 阶段2: 全品种（如果阶段1成功）
-    if 'error' not in report1:
-        print(f"\n\n阶段2: 全品种测试")
-        all_symbols = study.get_eligible_symbols()
-        report2 = study.run_full_study(all_symbols)
-        
-        if 'error' not in report2:
-            print("\n" + "=" * 80)
-            print("阶段2完成!")
-            is_m2 = report2['is_result']['best_metrics']
-            oos_m2 = report2['oos_result'].get('oos_metrics', {})
-            mc2 = report2['mc_result']
-            robust2 = report2['robustness']
-            
-            print(f"品种: {len(report2['symbols'])}个")
-            print(f"IS:  年化{is_m2['annual_return_pct']:.1f}% | 夏普{is_m2['sharpe_ratio']:.2f} | 回撤{is_m2['max_drawdown_pct']:.1f}%")
-            if oos_m2:
-                print(f"OOS: 年化{oos_m2['annual_return_pct']:.1f}% | 夏普{oos_m2['sharpe_ratio']:.2f} | 回撤{oos_m2['max_drawdown_pct']:.1f}%")
-            print(f"MC_P50: {mc2.get('percentiles', {}).get('p50', 0):.1f}%")
-            print(f"破产率: {mc2.get('ruin_probability', 0):.1f}%")
-            print(f"夏普衰减: {robust2.get('sharpe_decay', 0):.1%}")
-            print(f"过拟合: {'是 ⚠️' if robust2.get('is_overfit') else '否 ✅'}")
-            print("=" * 80)
