@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# 数据库文件
+*.db
+data/db/
+data/pricing_deviation.db
+data/backtest.db
+
+# 大型数据文件
+*.parquet
+data/*.csv
+backtest_results/*.csv
+backtest_results_live/*.csv
+
+# 大型子项目（各自独立git管理）
+Pricing deviation detection system/
+FinRobot/
+openbb/
+OpenAlice/
+ATLAS/
+
+# IDE
+.vscode/
+.claude/
+.lingma/
+.qoder/
+
+# 临时文件
+nul
+*.log
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
