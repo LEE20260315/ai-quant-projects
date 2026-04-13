@@ -1,0 +1,796 @@
+{
+  "symbol": "RB",
+  "is_result": {
+    "best_params": {
+      "percentile_window": 40,
+      "long_entry_pct": 0.25,
+      "short_entry_pct": 0.75,
+      "atr_stop_mult": 1.5,
+      "atr_take_mult": 2.5,
+      "max_hold_days": 7
+    },
+    "best_metrics": {
+      "annual_return_pct": 0.602166515540592,
+      "sharpe_ratio": 0.11774667949416892,
+      "max_drawdown_pct": -24.59086635635865,
+      "win_rate_pct": 50.0,
+      "total_trades": 20
+    },
+    "all_results": [
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.5949866659913834,
+        "sharpe_ratio": -0.1612745649004812,
+        "max_drawdown_pct": -27.445763671945123,
+        "win_rate_pct": 54.54545454545454,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.621614291137452,
+        "sharpe_ratio": -0.06221609580126764,
+        "max_drawdown_pct": -29.201565203138784,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.621614291137452,
+        "sharpe_ratio": -0.06221609580126764,
+        "max_drawdown_pct": -29.201565203138784,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.5781686371994175,
+        "sharpe_ratio": -0.05897175524281719,
+        "max_drawdown_pct": -26.628594675532046,
+        "win_rate_pct": 54.54545454545454,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.217927670069031,
+        "sharpe_ratio": -0.148058688077324,
+        "max_drawdown_pct": -26.31889882819354,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.3198562347388605,
+        "sharpe_ratio": -0.18011241894969188,
+        "max_drawdown_pct": -32.72144491450355,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.3652014811515474,
+        "sharpe_ratio": -0.1976172643975133,
+        "max_drawdown_pct": -31.800309729022143,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.3198562347388605,
+        "sharpe_ratio": -0.18011241894969188,
+        "max_drawdown_pct": -32.72144491450355,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -5.052641653012535,
+        "sharpe_ratio": -0.2552872096974187,
+        "max_drawdown_pct": -39.461829581223405,
+        "win_rate_pct": 41.66666666666667,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.483142571866149,
+        "sharpe_ratio": -0.22682329427854261,
+        "max_drawdown_pct": -30.868010089478236,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.4961784685180612,
+        "sharpe_ratio": -0.0708144041597659,
+        "max_drawdown_pct": -24.21080055040468,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.2623468207183084,
+        "sharpe_ratio": -0.11826222987377681,
+        "max_drawdown_pct": -31.023112481198094,
+        "win_rate_pct": 40.0,
+        "total_trades": 15
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.871834256724426,
+        "sharpe_ratio": -0.16312491764550946,
+        "max_drawdown_pct": -30.400719733968636,
+        "win_rate_pct": 50.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.8671910189085983,
+        "sharpe_ratio": -0.0904079069039562,
+        "max_drawdown_pct": -27.48431078648597,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 10
+        },
+        "annual_return_pct": -1.912929290441867,
+        "sharpe_ratio": -0.07629323130307472,
+        "max_drawdown_pct": -26.46926393925505,
+        "win_rate_pct": 40.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.6437023939483004,
+        "sharpe_ratio": -0.17261117531597855,
+        "max_drawdown_pct": -34.736244822114344,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.0186476168963527,
+        "sharpe_ratio": -0.169537572871881,
+        "max_drawdown_pct": -30.819429658589797,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.6309316065232116,
+        "sharpe_ratio": -0.06707899432297958,
+        "max_drawdown_pct": -31.119465877849713,
+        "win_rate_pct": 43.75,
+        "total_trades": 16
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.5949866659913834,
+        "sharpe_ratio": -0.1612745649004812,
+        "max_drawdown_pct": -27.445763671945123,
+        "win_rate_pct": 54.54545454545454,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -5.052641653012535,
+        "sharpe_ratio": -0.2552872096974187,
+        "max_drawdown_pct": -39.461829581223405,
+        "win_rate_pct": 41.66666666666667,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 10
+        },
+        "annual_return_pct": -3.7684123025721328,
+        "sharpe_ratio": -0.19243355912084964,
+        "max_drawdown_pct": -31.862955670077348,
+        "win_rate_pct": 40.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.8161083233977258,
+        "sharpe_ratio": -0.1422960925175953,
+        "max_drawdown_pct": -31.312148388973004,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.7704462089603301,
+        "sharpe_ratio": -0.05891691118524063,
+        "max_drawdown_pct": -27.542494345792317,
+        "win_rate_pct": 50.0,
+        "total_trades": 14
+      },
+      {
+        "params": {
+          "percentile_window": 50,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -0.16298397578171642,
+        "sharpe_ratio": 0.04208691770177792,
+        "max_drawdown_pct": -13.84623316710738,
+        "win_rate_pct": 50.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 10
+        },
+        "annual_return_pct": -2.527612251953393,
+        "sharpe_ratio": -0.11608051894177279,
+        "max_drawdown_pct": -32.38987940247521,
+        "win_rate_pct": 36.36363636363637,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.6214276013686635,
+        "sharpe_ratio": -0.0889490913523641,
+        "max_drawdown_pct": -24.509500717535804,
+        "win_rate_pct": 54.54545454545454,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.3198562347388605,
+        "sharpe_ratio": -0.18011241894969188,
+        "max_drawdown_pct": -32.72144491450355,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.8067761575558006,
+        "sharpe_ratio": -0.0672799490725728,
+        "max_drawdown_pct": -28.421973166653224,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.5534676186211644,
+        "sharpe_ratio": -0.1858015633348289,
+        "max_drawdown_pct": -37.11067532776508,
+        "win_rate_pct": 50.0,
+        "total_trades": 14
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.6310225779199716,
+        "sharpe_ratio": -0.07960764506863337,
+        "max_drawdown_pct": -24.53886650978957,
+        "win_rate_pct": 50.0,
+        "total_trades": 14
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.6214276013686635,
+        "sharpe_ratio": -0.0889490913523641,
+        "max_drawdown_pct": -24.509500717535804,
+        "win_rate_pct": 54.54545454545454,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.6310005932456462,
+        "sharpe_ratio": -0.10843968785798806,
+        "max_drawdown_pct": -24.538799234639335,
+        "win_rate_pct": 50.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 10
+        },
+        "annual_return_pct": -3.9382098317968794,
+        "sharpe_ratio": -0.25028077206561034,
+        "max_drawdown_pct": -28.57934731121802,
+        "win_rate_pct": 40.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.621614291137452,
+        "sharpe_ratio": -0.06221609580126764,
+        "max_drawdown_pct": -29.201565203138784,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": 0.602166515540592,
+        "sharpe_ratio": 0.11774667949416892,
+        "max_drawdown_pct": -24.59086635635865,
+        "win_rate_pct": 50.0,
+        "total_trades": 20
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.6437023939483004,
+        "sharpe_ratio": -0.17261117531597855,
+        "max_drawdown_pct": -34.736244822114344,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.7704462089603301,
+        "sharpe_ratio": -0.05891691118524063,
+        "max_drawdown_pct": -27.542494345792317,
+        "win_rate_pct": 50.0,
+        "total_trades": 14
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.8776451398228384,
+        "sharpe_ratio": -0.23796008200348542,
+        "max_drawdown_pct": -33.23157741002511,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 10
+        },
+        "annual_return_pct": -3.7212471674439085,
+        "sharpe_ratio": -0.18986279637722941,
+        "max_drawdown_pct": -31.729642162128307,
+        "win_rate_pct": 40.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -4.304247751473255,
+        "sharpe_ratio": -0.26211898734933514,
+        "max_drawdown_pct": -32.46899728417881,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -2.5033978734581352,
+        "sharpe_ratio": -0.11661962684248388,
+        "max_drawdown_pct": -30.426247158607957,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.3198562347388605,
+        "sharpe_ratio": -0.18011241894969188,
+        "max_drawdown_pct": -32.72144491450355,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.8,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.5121805404336497,
+        "sharpe_ratio": -0.058295727541998604,
+        "max_drawdown_pct": -26.432165735420064,
+        "win_rate_pct": 53.84615384615385,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.598580798610405,
+        "sharpe_ratio": -0.08059726192152031,
+        "max_drawdown_pct": -29.61166180990329,
+        "win_rate_pct": 46.666666666666664,
+        "total_trades": 15
+      },
+      {
+        "params": {
+          "percentile_window": 35,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.5781686371994175,
+        "sharpe_ratio": -0.05897175524281719,
+        "max_drawdown_pct": -26.628594675532046,
+        "win_rate_pct": 54.54545454545454,
+        "total_trades": 11
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.7,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -1.4894528038872812,
+        "sharpe_ratio": -0.043886866533402076,
+        "max_drawdown_pct": -27.494787901145717,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 45,
+          "long_entry_pct": 0.3,
+          "short_entry_pct": 0.65,
+          "atr_stop_mult": 1.5,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 10
+        },
+        "annual_return_pct": -3.9382098317968794,
+        "sharpe_ratio": -0.25028077206561034,
+        "max_drawdown_pct": -28.57934731121802,
+        "win_rate_pct": 40.0,
+        "total_trades": 10
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.2,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 3.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -4.5780313443500535,
+        "sharpe_ratio": -0.23917582011651817,
+        "max_drawdown_pct": -36.14670745447185,
+        "win_rate_pct": 46.15384615384615,
+        "total_trades": 13
+      },
+      {
+        "params": {
+          "percentile_window": 40,
+          "long_entry_pct": 0.25,
+          "short_entry_pct": 0.75,
+          "atr_stop_mult": 2.0,
+          "atr_take_mult": 2.5,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.0186476168963527,
+        "sharpe_ratio": -0.169537572871881,
+        "max_drawdown_pct": -30.819429658589797,
+        "win_rate_pct": 50.0,
+        "total_trades": 12
+      },
+      {
+        "params": {
+          "percentile_window": 30,
+          "long_entry_pct": 0.35,
+          "short_entry_pct": 0.8,
+          "atr_stop_mult": 2.2,
+          "atr_take_mult": 2.0,
+          "max_hold_days": 7
+        },
+        "annual_return_pct": -3.5534676186211644,
+        "sharpe_ratio": -0.1858015633348289,
+        "max_drawdown_pct": -37.11067532776508,
+        "win_rate_pct": 50.0,
+        "total_trades": 14
+      }
+    ]
+  },
+  "oos_result": {
+    "error": "OOS交易数不足",
+    "total_trades": 3
+  },
+  "mc_result": {
+    "error": "OOS交易数不足",
+    "total_trades": 3
+  },
+  "stress_test": {
+    "extreme_volatility": {
+      "description": "收益率标准差 x2.0",
+      "stressed_return_pct": -54.17298612883224
+    },
+    "higher_costs": {
+      "description": "手续费+滑点 x2.0",
+      "return_with_high_costs": -25.761168127647956,
+      "original_return": 0
+    }
+  },
+  "robustness": {
+    "error": "OOS交易数不足",
+    "total_trades": 3
+  },
+  "timestamp": "2026-04-13T14:13:31.948284"
+}

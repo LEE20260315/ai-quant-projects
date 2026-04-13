@@ -341,7 +341,7 @@ class RigorousResearch:
     # ============================================================
     # 4. 压力测试
     # ============================================================
-    def stress_test(self, symbol: str, is_params: Dict) -> Dict:
+    def stress_test(self, symbol: str, is_params: Dict, oos_result: Dict = None) -> Dict:
         """压力测试：极端波动、连续亏损、成本提升"""
         print(f"\n[压力测试] {symbol}")
         
@@ -375,8 +375,7 @@ class RigorousResearch:
         }
         
         # 4b. 连续最差交易日
-        oos_result = self.validate_oos(symbol, is_params)
-        if 'error' not in oos_result and oos_result.get('trades_df') is not None:
+        if oos_result and 'error' not in oos_result and oos_result.get('trades_df') is not None:
             trades = oos_result['trades_df'].sort_values('pnl')
             worst_n = min(self.config.stress_worst_consecutive, len(trades))
             worst_trades = trades.head(worst_n)
@@ -396,8 +395,8 @@ class RigorousResearch:
             atr_stop_mult=is_params['atr_stop_mult'],
             atr_take_mult=is_params['atr_take_mult'],
             max_hold_days=int(is_params['max_hold_days']),
-            commission_rate=0.0003,  # 万3 (x2)
-            slippage_rate=0.0004,    # 万4 (x2)
+            commission_rate=0.0003,
+            slippage_rate=0.0004,
             trend_filter_enabled=False,
         )
         strategy_cost = OptimizedQuantileStrategy(p_high_cost)
@@ -406,10 +405,12 @@ class RigorousResearch:
             self.config.initial_capital
         )
         
+        oos_annual = oos_result.get('oos_metrics', {}).get('annual_return_pct', 0) if oos_result and 'error' not in oos_result else 0
+        
         results['higher_costs'] = {
             'description': f'手续费+滑点 x{self.config.stress_cost_multiplier}',
             'return_with_high_costs': result_cost.get('total_return_pct', 0),
-            'original_return': oos_result.get('oos_metrics', {}).get('annual_return_pct', 0),
+            'original_return': oos_annual,
         }
         
         print(f"  极端波动: {stressed_return:.1f}%")
@@ -422,21 +423,9 @@ class RigorousResearch:
     # ============================================================
     # 5. 稳健性检验
     # ============================================================
-    def robustness_check(self, symbol: str, is_params: Dict) -> Dict:
-        """参数敏感性分析 + 过拟合检测"""
+    def robustness_check(self, symbol: str, is_params: Dict, is_sharpe: float, oos_sharpe: float) -> Dict:
+        """参数敏感性分析 + 过拟合检测（复用已有结果，不再重复回测）"""
         print(f"\n[稳健性检验] {symbol}")
-        
-        # 获取IS和OOS指标
-        is_result = self.optimize_parameters_is(symbol)
-        if 'error' in is_result:
-            return is_result
-        
-        oos_result = self.validate_oos(symbol, is_params)
-        if 'error' in oos_result:
-            return oos_result
-        
-        is_sharpe = is_result['best_metrics']['sharpe_ratio']
-        oos_sharpe = oos_result['oos_metrics']['sharpe_ratio']
         
         # 夏普衰减
         if is_sharpe != 0:
@@ -455,9 +444,9 @@ class RigorousResearch:
             upper = base_value * (1 + self.config.sensitivity_range)
             
             if param_name in ['percentile_window', 'max_hold_days']:
-                test_values = [int(lower), int(base_value), int(upper)]
+                test_values = [int(max(1, lower)), int(base_value), int(min(100, upper))]
             else:
-                test_values = np.linspace(lower, upper, 5)
+                test_values = np.round(np.linspace(lower, upper, 5), 2)
             
             for val in test_values:
                 test_params = is_params.copy()
@@ -527,10 +516,12 @@ class RigorousResearch:
         mc_result = self.monte_carlo_oos(symbol, best_params)
         
         # 4. 压力测试
-        stress_result = self.stress_test(symbol, best_params)
+        stress_result = self.stress_test(symbol, best_params, oos_result)
         
         # 5. 稳健性
-        robustness = self.robustness_check(symbol, best_params)
+        is_sharpe = is_result['best_metrics']['sharpe_ratio']
+        oos_sharpe = oos_result.get('oos_metrics', {}).get('sharpe_ratio', 0) if 'error' not in oos_result else 0
+        robustness = self.robustness_check(symbol, best_params, is_sharpe, oos_sharpe)
         
         # 汇总
         report = {
@@ -580,14 +571,80 @@ if __name__ == "__main__":
     config = ResearchConfig()
     research = RigorousResearch(config)
     
-    # 测试RM (菜籽粕) - v2表现最好的品种
-    report = research.run_full_research("RM")
+    # 批量测试所有数据充足的品种
+    loader = ParquetLoader()
+    availability = loader.check_data_availability()
+    # 需要至少250天数据计算200日均线
+    available = availability[availability['row_count'] >= 250]
     
-    if 'error' not in report:
-        print("\n" + "=" * 80)
-        print("研究完成!")
-        print(f"品种: {report['symbol']}")
-        print(f"IS夏普: {report['is_result']['best_metrics']['sharpe_ratio']:.2f}")
-        if 'oos_metrics' in report.get('oos_result', {}):
-            print(f"OOS夏普: {report['oos_result']['oos_metrics']['sharpe_ratio']:.2f}")
-        print("=" * 80)
+    print(f"\n可测试品种: {len(available)}个")
+    print("品种列表:", ", ".join(available['symbol'].tolist()))
+    
+    all_reports = {}
+    
+    for _, row in available.iterrows():
+        symbol = row['symbol']
+        try:
+            report = research.run_full_research(symbol)
+            all_reports[symbol] = report
+        except Exception as e:
+            print(f"\n⚠️ {symbol} 测试失败: {e}")
+            all_reports[symbol] = {'error': str(e)}
+    
+    # 汇总对比
+    print("\n" + "=" * 100)
+    print("所有品种研究汇总")
+    print("=" * 100)
+    
+    summary_rows = []
+    for symbol, report in all_reports.items():
+        if 'error' in report:
+            summary_rows.append({'symbol': symbol, 'error': report['error']})
+            continue
+        
+        is_m = report.get('is_result', {}).get('best_metrics', {})
+        oos_m = report.get('oos_result', {}).get('oos_metrics', {})
+        mc = report.get('mc_result', {})
+        robust = report.get('robustness', {})
+        
+        summary_rows.append({
+            'symbol': symbol,
+            'is_annual': is_m.get('annual_return_pct', 0),
+            'is_sharpe': is_m.get('sharpe_ratio', 0),
+            'is_dd': is_m.get('max_drawdown_pct', 0),
+            'is_trades': is_m.get('total_trades', 0),
+            'oos_annual': oos_m.get('annual_return_pct', 0),
+            'oos_sharpe': oos_m.get('sharpe_ratio', 0),
+            'oos_dd': oos_m.get('max_drawdown_pct', 0),
+            'oos_trades': oos_m.get('total_trades', 0),
+            'sharpe_decay': robust.get('sharpe_decay', 0),
+            'is_overfit': robust.get('is_overfit', False),
+            'mc_p50': mc.get('percentiles', {}).get('p50', 0),
+            'mc_ruin': mc.get('ruin_probability', 0),
+        })
+    
+    summary_df = pd.DataFrame(summary_rows)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    summary_path = os.path.join(config.output_dir, f"all_symbols_summary_{timestamp}.csv")
+    summary_df.to_csv(summary_path, index=False, encoding='utf-8-sig')
+    
+    print(f"\n{'品种':4s} | {'IS年化':>8s} | {'IS夏普':>6s} | {'IS回撤':>6s} | "
+          f"{'OOS年化':>8s} | {'OOS夏普':>7s} | {'OOS回撤':>7s} | "
+          f"{'夏普衰减':>8s} | {'过拟合':>5s} | {'MC_P50':>8s} | {'破产率':>6s}")
+    print("-" * 110)
+    
+    for _, r in summary_df.iterrows():
+        symbol = r['symbol']
+        if 'error' in r and pd.notna(r['error']):
+            print(f"{symbol:4s} | 错误: {r['error']}")
+        else:
+            overfit_flag = "⚠️" if r['is_overfit'] else "✅"
+            print(f"{symbol:4s} | {r['is_annual']:8.1f}% | {r['is_sharpe']:6.2f} | "
+                  f"{r['is_dd']:6.1f}% | {r['oos_annual']:8.1f}% | {r['oos_sharpe']:7.2f} | "
+                  f"{r['oos_dd']:7.1f}% | {r['sharpe_decay']:8.1%} | {overfit_flag:>5s} | "
+                  f"{r['mc_p50']:8.1f}% | {r['mc_ruin']:6.1f}%")
+    
+    print(f"\n汇总结果已保存: {summary_path}")
+    print("\n" + "=" * 100)
+    print("全部研究完成!")
+    print("=" * 100)
