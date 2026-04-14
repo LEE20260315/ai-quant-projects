@@ -576,9 +576,8 @@ class PortfolioRigorousStudy:
 # ============================================================
 if __name__ == "__main__":
     print("=" * 80)
-    print("路径二 v5：组合严谨研究 - 6主流品种")
-    print("MA + RB + TA + M + FG + SA | 1万元共享 | 总仓位≤80%")
-    print("IS: 2020-2023 | OOS: 2024-2025")
+    print("路径二 v5：组合严谨研究 - MA+TA+RB+M 四品种对比")
+    print("1万元共享 | 总仓位≤80% | 单品种≤50%")
     print("=" * 80)
     
     config = PortfolioResearchConfig(
@@ -587,29 +586,84 @@ if __name__ == "__main__":
     )
     study = PortfolioRigorousStudy(config)
     
-    # 6主流品种组合
-    symbols = ['MA', 'RB', 'TA', 'M', 'FG', 'SA']
+    symbols = ['MA', 'TA', 'RB', 'M']
     print(f"\n测试品种: {', '.join(symbols)}")
     
-    report = study.run_full_study(symbols)
+    # ========== 第1轮：原时间划分 IS:2020-2023, OOS:2024-2025 ==========
+    print(f"\n{'='*60}")
+    print(f"第1轮：IS 2020-2023 | OOS 2024-2025")
+    print(f"{'='*60}")
     
-    if 'error' not in report:
-        print("\n" + "=" * 80)
-        print("研究完成!")
-        is_m = report['is_result']['best_metrics']
-        oos_m = report['oos_result'].get('oos_metrics', {})
-        mc = report['mc_result']
-        robust = report['robustness']
-        
-        print(f"品种: {', '.join(report['symbols'])}")
-        print(f"IS:  年化{is_m['annual_return_pct']:.1f}% | 夏普{is_m['sharpe_ratio']:.2f} | 回撤{is_m['max_drawdown_pct']:.1f}%")
-        if oos_m:
-            print(f"OOS: 年化{oos_m['annual_return_pct']:.1f}% | 夏普{oos_m['sharpe_ratio']:.2f} | 回撤{oos_m['max_drawdown_pct']:.1f}%")
-            print(f"OOS期末资金: {oos_m.get('final_capital', 0):,.0f}元")
-        print(f"MC_P50: {mc.get('percentiles', {}).get('p50', 0):.1f}%")
-        print(f"MC_P5: {mc.get('percentiles', {}).get('p5', 0):.1f}%")
-        print(f"MC_P95: {mc.get('percentiles', {}).get('p95', 0):.1f}%")
-        print(f"破产率: {mc.get('ruin_probability', 0):.1f}%")
-        print(f"夏普衰减: {robust.get('sharpe_decay', 0):.1%}")
-        print(f"过拟合: {'是 ⚠️' if robust.get('is_overfit') else '否 ✅'}")
-        print("=" * 80)
+    report1 = study.run_full_study(symbols)
+    
+    if 'error' not in report1:
+        print(f"\n第1轮完成!")
+        is_m1 = report1['is_result']['best_metrics']
+        oos_m1 = report1['oos_result'].get('oos_metrics', {})
+        mc1 = report1['mc_result']
+        robust1 = report1['robustness']
+        print(f"IS:  年化{is_m1['annual_return_pct']:.1f}% | 夏普{is_m1['sharpe_ratio']:.2f} | 回撤{is_m1['max_drawdown_pct']:.1f}%")
+        if oos_m1:
+            print(f"OOS: 年化{oos_m1['annual_return_pct']:.1f}% | 夏普{oos_m1['sharpe_ratio']:.2f} | 回撤{oos_m1['max_drawdown_pct']:.1f}%")
+            print(f"OOS期末资金: {oos_m1.get('final_capital', 0):,.0f}元")
+            if oos_m1.get('symbol_stats'):
+                for sym, stats in oos_m1['symbol_stats'].items():
+                    print(f"  {sym:4s} | {stats['trades']:3d}笔 | 胜率:{stats['win_rate']:5.1f}% | 盈亏:{stats['total_pnl']:+8.0f}元")
+        print(f"MC_P50: {mc1.get('percentiles', {}).get('p50', 0):.1f}% | MC_P5: {mc1.get('percentiles', {}).get('p5', 0):.1f}%")
+        print(f"破产率: {mc1.get('ruin_probability', 0):.1f}%")
+        print(f"夏普衰减: {robust1.get('sharpe_decay', 0):.1%} | 过拟合: {'是 ⚠️' if robust1.get('is_overfit') else '否 ✅'}")
+    
+    # ========== 第2轮：换时间划分 IS:2018-2022, OOS:2023 ==========
+    print(f"\n{'='*60}")
+    print(f"第2轮：IS 2018-2022 | OOS 2023")
+    print(f"{'='*60}")
+    
+    study2_config = PortfolioResearchConfig(
+        is_start="2018-01-01",
+        is_end="2022-12-31",
+        oos_start="2023-01-01",
+        oos_end="2023-12-31",
+        random_search_iterations=50,
+        mc_simulations=500,
+    )
+    study2 = PortfolioRigorousStudy(study2_config)
+    
+    report2 = study2.run_full_study(symbols)
+    
+    if 'error' not in report2:
+        print(f"\n第2轮完成!")
+        is_m2 = report2['is_result']['best_metrics']
+        oos_m2 = report2['oos_result'].get('oos_metrics', {})
+        mc2 = report2['mc_result']
+        robust2 = report2['robustness']
+        print(f"IS:  年化{is_m2['annual_return_pct']:.1f}% | 夏普{is_m2['sharpe_ratio']:.2f} | 回撤{is_m2['max_drawdown_pct']:.1f}%")
+        if oos_m2:
+            print(f"OOS: 年化{oos_m2['annual_return_pct']:.1f}% | 夏普{oos_m2['sharpe_ratio']:.2f} | 回撤{oos_m2['max_drawdown_pct']:.1f}%")
+            print(f"OOS期末资金: {oos_m2.get('final_capital', 0):,.0f}元")
+            if oos_m2.get('symbol_stats'):
+                for sym, stats in oos_m2['symbol_stats'].items():
+                    print(f"  {sym:4s} | {stats['trades']:3d}笔 | 胜率:{stats['win_rate']:5.1f}% | 盈亏:{stats['total_pnl']:+8.0f}元")
+        print(f"MC_P50: {mc2.get('percentiles', {}).get('p50', 0):.1f}% | MC_P5: {mc2.get('percentiles', {}).get('p5', 0):.1f}%")
+        print(f"破产率: {mc2.get('ruin_probability', 0):.1f}%")
+        print(f"夏普衰减: {robust2.get('sharpe_decay', 0):.1%} | 过拟合: {'是 ⚠️' if robust2.get('is_overfit') else '否 ✅'}")
+    
+    # ========== 汇总对比 ==========
+    print(f"\n{'='*80}")
+    print(f"两轮对比汇总")
+    print(f"{'='*80}")
+    print(f"{'指标':15s} | {'第1轮(20-23/24-25)':>20s} | {'第2轮(18-22/23)':>20s}")
+    print(f"{'-'*80}")
+    if 'error' not in report1 and 'error' not in report2:
+        print(f"{'IS年化':15s} | {is_m1['annual_return_pct']:>19.1f}% | {is_m2['annual_return_pct']:>19.1f}%")
+        print(f"{'IS夏普':15s} | {is_m1['sharpe_ratio']:>20.2f} | {is_m2['sharpe_ratio']:>20.2f}")
+        print(f"{'IS回撤':15s} | {is_m1['max_drawdown_pct']:>18.1f}% | {is_m2['max_drawdown_pct']:>18.1f}%")
+        print(f"{'OOS年化':15s} | {oos_m1['annual_return_pct']:>19.1f}% | {oos_m2['annual_return_pct']:>19.1f}%")
+        print(f"{'OOS夏普':15s} | {oos_m1['sharpe_ratio']:>20.2f} | {oos_m2['sharpe_ratio']:>20.2f}")
+        print(f"{'OOS回撤':15s} | {oos_m1['max_drawdown_pct']:>18.1f}% | {oos_m2['max_drawdown_pct']:>18.1f}%")
+        print(f"{'MC_P50':15s} | {mc1['percentiles']['p50']:>18.1f}% | {mc2['percentiles']['p50']:>18.1f}%")
+        print(f"{'MC破产率':15s} | {mc1['ruin_probability']:>19.1f}% | {mc2['ruin_probability']:>19.1f}%")
+        print(f"{'夏普衰减':15s} | {robust1['sharpe_decay']:>18.1%} | {robust2['sharpe_decay']:>18.1%}")
+        overfit1 = '是 ⚠️' if robust1.get('is_overfit') else '否 ✅'
+        overfit2 = '是 ⚠️' if robust2.get('is_overfit') else '否 ✅'
+        print(f"{'过拟合':15s} | {overfit1:>20s} | {overfit2:>20s}")
+        print(f"{'='*80}")
