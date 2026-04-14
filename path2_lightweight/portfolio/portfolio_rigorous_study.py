@@ -41,6 +41,7 @@ class PortfolioResearchConfig:
     # 组合限制
     max_positions: int = 3
     max_position_pct: float = 0.50
+    max_total_position_pct: float = 0.80  # 总仓位上限80%
     
     # 参数搜索空间
     param_grid: Dict[str, list] = None
@@ -160,6 +161,7 @@ class PortfolioRigorousStudy:
                 initial_capital=self.config.initial_capital,
                 max_positions=self.config.max_positions,
                 max_position_pct=self.config.max_position_pct,
+                max_total_position_pct=self.config.max_total_position_pct,
                 start_date=self.config.is_start,
                 end_date=self.config.is_end,
             )
@@ -242,6 +244,7 @@ class PortfolioRigorousStudy:
             initial_capital=self.config.initial_capital,
             max_positions=self.config.max_positions,
             max_position_pct=self.config.max_position_pct,
+            max_total_position_pct=self.config.max_total_position_pct,
             start_date=self.config.oos_start,
             end_date=self.config.oos_end,
         )
@@ -573,8 +576,8 @@ class PortfolioRigorousStudy:
 # ============================================================
 if __name__ == "__main__":
     print("=" * 80)
-    print("路径二 v5：组合严谨研究 - 阶段2全品种")
-    print("1万元共享 | 单品种≤50% | 最多3品种")
+    print("路径二 v5：组合严谨研究 - 6主流品种")
+    print("MA + RB + TA + M + FG + SA | 1万元共享 | 总仓位≤80%")
     print("IS: 2020-2023 | OOS: 2024-2025")
     print("=" * 80)
     
@@ -584,28 +587,29 @@ if __name__ == "__main__":
     )
     study = PortfolioRigorousStudy(config)
     
-    # 直接跑全品种
-    print(f"\n全品种测试")
-    all_symbols = study.get_eligible_symbols()
-    report2 = study.run_full_study(all_symbols)
+    # 6主流品种组合
+    symbols = ['MA', 'RB', 'TA', 'M', 'FG', 'SA']
+    print(f"\n测试品种: {', '.join(symbols)}")
     
-    if 'error' not in report2:
+    report = study.run_full_study(symbols)
+    
+    if 'error' not in report:
         print("\n" + "=" * 80)
-        print("全品种研究完成!")
-        is_m2 = report2['is_result']['best_metrics']
-        oos_m2 = report2['oos_result'].get('oos_metrics', {})
-        mc2 = report2['mc_result']
-        robust2 = report2['robustness']
+        print("研究完成!")
+        is_m = report['is_result']['best_metrics']
+        oos_m = report['oos_result'].get('oos_metrics', {})
+        mc = report['mc_result']
+        robust = report['robustness']
         
-        print(f"品种: {len(report2['symbols'])}个")
-        print(f"IS:  年化{is_m2['annual_return_pct']:.1f}% | 夏普{is_m2['sharpe_ratio']:.2f} | 回撤{is_m2['max_drawdown_pct']:.1f}%")
-        if oos_m2:
-            print(f"OOS: 年化{oos_m2['annual_return_pct']:.1f}% | 夏普{oos_m2['sharpe_ratio']:.2f} | 回撤{oos_m2['max_drawdown_pct']:.1f}%")
-            print(f"OOS期末资金: {oos_m2.get('final_capital', 0):,.0f}元")
-        print(f"MC_P50: {mc2.get('percentiles', {}).get('p50', 0):.1f}%")
-        print(f"MC_P5: {mc2.get('percentiles', {}).get('p5', 0):.1f}%")
-        print(f"MC_P95: {mc2.get('percentiles', {}).get('p95', 0):.1f}%")
-        print(f"破产率: {mc2.get('ruin_probability', 0):.1f}%")
-        print(f"夏普衰减: {robust2.get('sharpe_decay', 0):.1%}")
-        print(f"过拟合: {'是 ⚠️' if robust2.get('is_overfit') else '否 ✅'}")
+        print(f"品种: {', '.join(report['symbols'])}")
+        print(f"IS:  年化{is_m['annual_return_pct']:.1f}% | 夏普{is_m['sharpe_ratio']:.2f} | 回撤{is_m['max_drawdown_pct']:.1f}%")
+        if oos_m:
+            print(f"OOS: 年化{oos_m['annual_return_pct']:.1f}% | 夏普{oos_m['sharpe_ratio']:.2f} | 回撤{oos_m['max_drawdown_pct']:.1f}%")
+            print(f"OOS期末资金: {oos_m.get('final_capital', 0):,.0f}元")
+        print(f"MC_P50: {mc.get('percentiles', {}).get('p50', 0):.1f}%")
+        print(f"MC_P5: {mc.get('percentiles', {}).get('p5', 0):.1f}%")
+        print(f"MC_P95: {mc.get('percentiles', {}).get('p95', 0):.1f}%")
+        print(f"破产率: {mc.get('ruin_probability', 0):.1f}%")
+        print(f"夏普衰减: {robust.get('sharpe_decay', 0):.1%}")
+        print(f"过拟合: {'是 ⚠️' if robust.get('is_overfit') else '否 ✅'}")
         print("=" * 80)

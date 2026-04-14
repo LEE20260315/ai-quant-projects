@@ -28,6 +28,7 @@ class PortfolioConfig:
     initial_capital: float = 10000
     max_positions: int = 3               # 最多同时持有3个品种
     max_position_pct: float = 0.50       # 单品种最大仓位50%
+    max_total_position_pct: float = 0.80 # 总仓位上限80%
     start_date: str = "2020-01-01"
     end_date: str = "2025-12-31"
     commission_rate: float = 0.00015
@@ -347,6 +348,9 @@ class PortfolioBacktest:
                 today_signals.sort(key=lambda x: x['composite_score'], reverse=True)
             
             # 5. 执行开仓（最多到max_positions）
+            current_total_margin = sum(p.margin_used for p in positions.values())
+            max_total_margin = capital * self.config.max_total_position_pct
+            
             for sig in today_signals:
                 if len(positions) >= self.config.max_positions:
                     break
@@ -361,8 +365,12 @@ class PortfolioBacktest:
                 spec = self.loader.get_spec(symbol)
                 margin_needed = spec.calc_margin(exec_price)
                 
-                # 保证金检查：单品种≤50%资金
+                # 保证金检查1：单品种≤50%资金
                 if margin_needed > capital * self.config.max_position_pct:
+                    continue
+                
+                # 保证金检查2：总仓位≤80%
+                if current_total_margin + margin_needed > max_total_margin:
                     continue
                 
                 # 计算止损止盈
