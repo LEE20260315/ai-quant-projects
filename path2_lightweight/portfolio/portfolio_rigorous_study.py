@@ -586,7 +586,7 @@ if __name__ == "__main__":
     )
     study = PortfolioRigorousStudy(config)
     
-    symbols = ['MA', 'TA', 'RB', 'M']
+    symbols = ['MA', 'RM', 'TA', 'M']
     print(f"\n测试品种: {', '.join(symbols)}")
     
     # ========== 第1轮：原时间划分 IS:2020-2023, OOS:2024-2025 ==========
