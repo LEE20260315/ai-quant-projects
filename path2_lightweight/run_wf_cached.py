@@ -12,7 +12,7 @@ from portfolio.portfolio_backtest import PortfolioBacktest, PortfolioConfig
 from strategies.quantile_short_term_v2 import OptimizedParams
 from data.parquet_loader import ParquetLoader
 
-SYMBOLS = ['MA', 'RM', 'TA']
+SYMBOLS = ['TA', 'RM', 'MA', 'RB']
 PARAM_GRID = {
     'percentile_window': [25, 30, 40, 50],
     'long_entry_pct': [0.20, 0.25, 0.30, 0.35],
@@ -20,6 +20,8 @@ PARAM_GRID = {
     'atr_stop_mult': [1.5, 1.8, 2.0, 2.5],
     'atr_take_mult': [2.0, 2.5, 3.0],
     'max_hold_days': [7, 10, 14, 20],
+    'ema_fast': [10, 15, 20],
+    'ema_slow': [40, 50, 60],
 }
 
 WF_WINDOWS = [
@@ -80,7 +82,8 @@ def main():
                 percentile_window=int(sp['percentile_window']), long_entry_pct=sp['long_entry_pct'],
                 short_entry_pct=sp['short_entry_pct'], atr_stop_mult=sp['atr_stop_mult'],
                 atr_take_mult=sp['atr_take_mult'], max_hold_days=int(sp['max_hold_days']),
-                trend_filter_enabled=False)
+                ema_fast=int(sp.get('ema_fast', 15)), ema_slow=int(sp.get('ema_slow', 50)),
+                trend_filter_enabled=True)
             cfg = PortfolioConfig(initial_capital=10000, max_positions=3, max_position_pct=0.50,
                                   max_total_position_pct=0.80, start_date=ws, end_date=we)
             r = PortfolioBacktest(cfg).run(SYMBOLS, p)
@@ -99,7 +102,8 @@ def main():
             percentile_window=int(best_p['percentile_window']), long_entry_pct=best_p['long_entry_pct'],
             short_entry_pct=best_p['short_entry_pct'], atr_stop_mult=best_p['atr_stop_mult'],
             atr_take_mult=best_p['atr_take_mult'], max_hold_days=int(best_p['max_hold_days']),
-            trend_filter_enabled=False)
+            ema_fast=int(best_p.get('ema_fast', 15)), ema_slow=int(best_p.get('ema_slow', 50)),
+            trend_filter_enabled=True)
         cfg = PortfolioConfig(initial_capital=10000, max_positions=3, max_position_pct=0.50,
                               max_total_position_pct=0.80, start_date=os_, end_date=oe)
         r = PortfolioBacktest(cfg).run(SYMBOLS, p)
