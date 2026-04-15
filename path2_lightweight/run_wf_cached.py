@@ -12,7 +12,7 @@ from portfolio.portfolio_backtest import PortfolioBacktest, PortfolioConfig
 from strategies.quantile_short_term_v2 import OptimizedParams
 from data.parquet_loader import ParquetLoader
 
-SYMBOLS = ['MA', 'RM', 'TA', 'M']
+SYMBOLS = ['MA', 'RM', 'TA']
 PARAM_GRID = {
     'percentile_window': [25, 30, 40, 50],
     'long_entry_pct': [0.20, 0.25, 0.30, 0.35],
