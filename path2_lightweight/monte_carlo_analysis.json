@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-04-17T11:00:53.219672",
+  "method": "block_bootstrap",
+  "block_size": 10,
+  "num_simulations": 5000,
+  "trade_stats": {
+    "total_trades": 98,
+    "win_rate": 0.4897959183673469,
+    "avg_win": 805.4922916666666,
+    "avg_loss": -532.6956,
+    "profit_factor": 1.451621901889184,
+    "expectancy": 122.74336734693875
+  },
+  "simulation_results": {
+    "bankruptcy_prob": 0.1322,
+    "avg_final_capital": 21489.008718,
+    "median_final_capital": 22057.305,
+    "avg_max_drawdown": 0.31508183412516955,
+    "p95_max_drawdown": 0.5242452528797047,
+    "p99_max_drawdown": 0.5530091294320735,
+    "profit_prob": 0.859,
+    "avg_annual_return": 0.21260269266989384
+  }
+}

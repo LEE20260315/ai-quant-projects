@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-04-17T11:26:10.654038",
+  "initial_capital": 10000,
+  "num_trades": 98,
+  "scenarios": {
+    "黑天鹅事件(30%暴跌)": {
+      "final_capital": 15420.2,
+      "total_return_pct": 54.2,
+      "max_drawdown_pct": 36.33
+    },
+    "黑天鹅事件(50%暴跌)": {
+      "final_capital": 11014.43,
+      "total_return_pct": 10.14,
+      "max_drawdown_pct": 54.52
+    },
+    "闪崩(15%暴跌+10%反弹)": {
+      "final_capital": 20596.97,
+      "total_return_pct": 105.97,
+      "max_drawdown_pct": 23.28
+    },
+    "连续亏损(5笔额外5%亏损)": {
+      "final_capital": 17045.5,
+      "total_return_pct": 70.46,
+      "max_drawdown_pct": 29.62
+    },
+    "波动率收缩(收益减半)": {
+      "final_capital": 16014.43,
+      "total_return_pct": 60.14,
+      "max_drawdown_pct": 12.45
+    },
+    "追加保证金(50%回撤强平)": {
+      "final_capital": 22028.85,
+      "total_return_pct": 120.29,
+      "max_drawdown_pct": 23.28
+    }
+  }
+}

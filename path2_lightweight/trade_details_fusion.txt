@@ -1,0 +1,13 @@
+date:2025-05-22 00:00:00, symbol:TA, dir:-1, entry:4850.00, exit:4702.00, pnl:723.28, reason:timeout_7, fusion:no_path1_signal, capital:10723.28
+date:2025-06-16 00:00:00, symbol:MA, dir:-1, entry:2400.00, exit:2468.04, pnl:-697.40, reason:hard_stop, fusion:no_path1_signal, capital:10025.89
+date:2025-06-18 00:00:00, symbol:MA, dir:-1, entry:2440.00, exit:2519.29, pnl:-810.21, reason:hard_stop, fusion:no_path1_signal, capital:9215.67
+date:2025-06-24 00:00:00, symbol:MA, dir:-1, entry:2523.00, exit:2406.57, pnl:1147.03, reason:atr_tp, fusion:no_path1_signal, capital:10362.71
+date:2025-06-24 00:00:00, symbol:TA, dir:-1, entry:4960.00, exit:4704.57, pnl:1260.23, reason:atr_tp, fusion:no_path1_signal, capital:11622.94
+date:2025-06-25 00:00:00, symbol:RM, dir:-1, entry:2658.00, exit:2580.43, pnl:757.38, reason:atr_tp, fusion:no_path1_signal, capital:12380.32
+date:2025-07-23 00:00:00, symbol:RM, dir:-1, entry:2719.00, exit:2781.79, pnl:-647.11, reason:hard_stop, fusion:same_dir:tp+0.00atr,hold+0d, capital:11733.21
+date:2025-07-24 00:00:00, symbol:RM, dir:-1, entry:2757.00, exit:2666.57, pnl:885.30, reason:atr_tp, fusion:same_dir:tp+0.00atr,hold+0d, capital:12618.51
+date:2025-08-01 00:00:00, symbol:TA, dir:-1, entry:4860.00, exit:4744.00, pnl:563.19, reason:timeout_7, fusion:no_path1_signal, capital:13181.70
+date:2025-09-02 00:00:00, symbol:TA, dir:-1, entry:4862.00, exit:4756.00, pnl:513.17, reason:timeout_7, fusion:no_path1_signal, capital:13694.87
+date:2025-11-14 00:00:00, symbol:TA, dir:-1, entry:4680.00, exit:4700.00, pnl:-116.41, reason:timeout_7, fusion:no_path1_signal, capital:13578.46
+date:2025-11-14 00:00:00, symbol:RM, dir:-1, entry:2548.00, exit:2490.00, pnl:562.37, reason:timeout_7, fusion:same_dir:tp+0.00atr,hold+0d, capital:14140.82
+date:2025-12-31 00:00:00, symbol:MA, dir:-1, entry:2164.00, exit:2233.32, pnl:-708.60, reason:hard_stop, fusion:no_path1_signal, capital:13432.22
