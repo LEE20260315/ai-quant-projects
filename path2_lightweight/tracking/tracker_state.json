@@ -27,6 +27,14 @@
       "return_pct": 0.0,
       "positions": 0,
       "new_signals": 0
+    },
+    {
+      "date": "2026-04-20",
+      "capital": 10000,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 0,
+      "new_signals": 0
     }
   ],
   "start_date": "2026-04-20",

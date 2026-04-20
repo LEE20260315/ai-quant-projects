@@ -12,4 +12,5 @@ echo   脚本: run_daily_task.bat
 echo.
 echo 查看任务: schtasks /query /tn "QuantFusion_Daily"
 echo 删除任务: schtasks /delete /tn "QuantFusion_Daily" /f
+echo 手动运行: schtasks /run /tn "QuantFusion_Daily"
 pause

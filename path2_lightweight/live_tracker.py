@@ -277,19 +277,19 @@ class LiveTracker:
                     if direction == 1:
                         unrealized = (current_price - pos['entry_price']) * self.loader.get_spec(sym).multiplier * pos.get('size', 1)
                         if current_price <= pos['stop_loss']:
-                            alert_msg = f'⛔ {sym} 止损触发! 现价{current_price:.0f}<=止损{pos["stop_loss"]:.0f}'
+                            alert_msg = f'[STOP] {sym} 止损触发! 现价{current_price:.0f}<=止损{pos["stop_loss"]:.0f}'
                         elif current_price >= pos['take_profit']:
-                            alert_msg = f'✅ {sym} 止盈触发! 现价{current_price:.0f}>=止盈{pos["take_profit"]:.0f}'
+                            alert_msg = f'[PROFIT] {sym} 止盈触发! 现价{current_price:.0f}>=止盈{pos["take_profit"]:.0f}'
                         elif current_price <= pos['stop_loss'] * 1.02:
-                            alert_msg = f'⚠️ {sym} 接近止损! 现价{current_price:.0f}, 止损{pos["stop_loss"]:.0f}'
+                            alert_msg = f'[WARN] {sym} 接近止损! 现价{current_price:.0f}, 止损{pos["stop_loss"]:.0f}'
                     else:
                         unrealized = (pos['entry_price'] - current_price) * self.loader.get_spec(sym).multiplier * pos.get('size', 1)
                         if current_price >= pos['stop_loss']:
-                            alert_msg = f'⛔ {sym} 止损触发! 现价{current_price:.0f}>=止损{pos["stop_loss"]:.0f}'
+                            alert_msg = f'[STOP] {sym} 止损触发! 现价{current_price:.0f}>=止损{pos["stop_loss"]:.0f}'
                         elif current_price <= pos['take_profit']:
-                            alert_msg = f'✅ {sym} 止盈触发! 现价{current_price:.0f}<=止盈{pos["take_profit"]:.0f}'
+                            alert_msg = f'[PROFIT] {sym} 止盈触发! 现价{current_price:.0f}<=止盈{pos["take_profit"]:.0f}'
                         elif current_price >= pos['stop_loss'] * 0.98:
-                            alert_msg = f'⚠️ {sym} 接近止损! 现价{current_price:.0f}, 止损{pos["stop_loss"]:.0f}'
+                            alert_msg = f'[WARN] {sym} 接近止损! 现价{current_price:.0f}, 止损{pos["stop_loss"]:.0f}'
 
                     if alert_msg:
                         has_alert = True
@@ -312,13 +312,13 @@ class LiveTracker:
     def _risk_check(self, dd):
         print(f'\n--- 风控检查 ---')
         if dd >= 0.35:
-            print(f'  ⛔ 三级风控: 回撤{dd:.1%}>=35%, 建议平掉所有持仓')
+            print(f'  [XXX] 三级风控: 回撤{dd:.1%}>=35%, 建议平掉所有持仓')
         elif dd >= 0.27:
-            print(f'  🔴 二级风控: 回撤{dd:.1%}>=27%, 停止开新仓')
+            print(f'  [RED] 二级风控: 回撤{dd:.1%}>=27%, 停止开新仓')
         elif dd >= 0.20:
-            print(f'  🟡 一级风控: 回撤{dd:.1%}>=20%, 新仓仓位减半')
+            print(f'  [YLW] 一级风控: 回撤{dd:.1%}>=20%, 新仓仓位减半')
         else:
-            print(f'  🟢 正常: 回撤{dd:.1%}<20%')
+            print(f'  [GRN] 正常: 回撤{dd:.1%}<20%')
 
         if self.state['trade_log']:
             consecutive_losses = 0
@@ -328,7 +328,7 @@ class LiveTracker:
                 else:
                     break
             if consecutive_losses >= 3:
-                print(f'  ⚠️ 连亏保护: 连续{consecutive_losses}笔亏损, 建议暂停交易3天')
+                print(f'  [WARN] 连亏保护: 连续{consecutive_losses}笔亏损, 建议暂停交易3天')
 
 
 if __name__ == '__main__':
