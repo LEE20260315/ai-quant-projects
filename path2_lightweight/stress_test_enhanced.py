@@ -52,34 +52,35 @@ class EnhancedStressTester:
         capital = self.initial_capital
         peak = capital
         max_dd = 0
-        for pnl in pnl_list:
+        crash_idx = len(pnl_list) // 2 if len(pnl_list) > 10 else len(pnl_list)
+        for i, pnl in enumerate(pnl_list):
+            if i == crash_idx:
+                crash_loss = capital * crash_pct
+                capital -= crash_loss
             capital += pnl
             if capital > peak:
                 peak = capital
-            dd = (peak - capital) / peak
+            dd = (peak - capital) / peak if peak > 0 else 0
             max_dd = max(max_dd, dd)
-        crash_loss = capital * crash_pct
-        capital -= crash_loss
-        dd = (peak - capital) / peak if peak > 0 else 0
-        max_dd = max(max_dd, dd)
         return capital, max_dd
 
     def scenario_flash_crash(self, pnl_list, crash_pct=0.15, recovery_pct=0.10):
         capital = self.initial_capital
         peak = capital
         max_dd = 0
-        for pnl in pnl_list:
+        crash_idx = len(pnl_list) // 2 if len(pnl_list) > 10 else len(pnl_list)
+        for i, pnl in enumerate(pnl_list):
+            if i == crash_idx:
+                crash_loss = capital * crash_pct
+                capital -= crash_loss
+            if i == crash_idx + 1:
+                recovery = capital * recovery_pct
+                capital += recovery
             capital += pnl
             if capital > peak:
                 peak = capital
-            dd = (peak - capital) / peak
+            dd = (peak - capital) / peak if peak > 0 else 0
             max_dd = max(max_dd, dd)
-        crash_loss = capital * crash_pct
-        capital -= crash_loss
-        dd = (peak - capital) / peak if peak > 0 else 0
-        max_dd = max(max_dd, dd)
-        recovery = capital * recovery_pct
-        capital += recovery
         return capital, max_dd
 
     def scenario_losing_streak(self, pnl_list, extra_losses=5, loss_pct=0.05):

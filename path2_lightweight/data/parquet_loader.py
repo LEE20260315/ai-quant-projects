@@ -5,6 +5,7 @@
 核心数据加载器 - 从本地Parquet文件读取期货连续合约数据
 """
 import os
+import time
 import glob
 import pandas as pd
 import numpy as np
@@ -12,12 +13,9 @@ from pathlib import Path
 from typing import Optional, List, Dict
 from dataclasses import dataclass
 
-
-# ============================================================
-# 数据源配置 - 统一从这里读取
-# ============================================================
-CTA_RESEARCH_ROOT = r"D:\My project\cta_research"
-FUTURES_CONTINUOUS_DIR = os.path.join(CTA_RESEARCH_ROOT, "futures", "continuous")
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import FUTURES_DATA_DIR
 
 
 # ============================================================
@@ -71,9 +69,14 @@ class ParquetLoader:
     - 字段: date, open, high, low, close, volume, open_interest
     """
     
-    def __init__(self, data_dir: str = FUTURES_CONTINUOUS_DIR):
+    def __init__(self, data_dir: str = None,
+                 cache_ttl_seconds: int = 3600):
+        if data_dir is None:
+            data_dir = FUTURES_DATA_DIR
         self.data_dir = data_dir
         self._cache: Dict[str, pd.DataFrame] = {}
+        self._cache_time: Dict[str, float] = {}
+        self._cache_ttl = cache_ttl_seconds
     
     def get_spec(self, symbol: str) -> Optional[FuturesSpec]:
         """获取品种规格"""
@@ -99,10 +102,18 @@ class ParquetLoader:
             DataFrame with columns: date, open, high, low, close, volume, open_interest
             或 None 如果文件不存在
         """
-        # 检查缓存
         if use_cache and symbol in self._cache:
-            df = self._cache[symbol].copy()
+            cached_time = self._cache_time.get(symbol, 0)
+            if (time.time() - cached_time) < self._cache_ttl:
+                df = self._cache[symbol].copy()
+            else:
+                del self._cache[symbol]
+                self._cache_time.pop(symbol, None)
+                df = None
         else:
+            df = None
+
+        if df is None:
             filepath = os.path.join(self.data_dir, f"{symbol}_main.parquet")
             if not os.path.exists(filepath):
                 return None
@@ -119,6 +130,7 @@ class ParquetLoader:
             
             if use_cache:
                 self._cache[symbol] = df.copy()
+                self._cache_time[symbol] = time.time()
         
         # 日期过滤
         if start_date:
@@ -258,37 +270,32 @@ def calc_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
 
 
 def calc_rsi(series: pd.Series, period: int = 14) -> pd.Series:
-    """计算RSI"""
     delta = series.diff()
     gain = delta.where(delta > 0, 0.0)
     loss = (-delta).where(delta < 0, 0.0)
-    
-    avg_gain = gain.rolling(window=period).mean()
-    avg_loss = loss.rolling(window=period).mean()
-    
+
+    avg_gain = gain.ewm(alpha=1.0/period, min_periods=period, adjust=False).mean()
+    avg_loss = loss.ewm(alpha=1.0/period, min_periods=period, adjust=False).mean()
+
     rs = avg_gain / avg_loss
     return 100 - (100 / (1 + rs))
 
 
 def calc_percentile_rank(series: pd.Series, window: int = 40) -> pd.Series:
-    """
-    计算滚动分位数排名
-    
-    percentile_rank = (当前值在过去window天中的排名) / window
-    """
-    return series.rolling(window=window).apply(
-        lambda x: pd.Series(x).rank(pct=True).iloc[-1],
-        raw=False
-    )
+    values = series.values
+    n = len(values)
+    result = np.full(n, np.nan)
+    for i in range(window - 1, n):
+        window_vals = values[i - window + 1:i + 1]
+        result[i] = np.sum(window_vals <= values[i]) / window
+    return pd.Series(result, index=series.index)
 
 
 def calc_ma(series: pd.Series, period: int) -> pd.Series:
-    """计算简单移动平均"""
     return series.rolling(window=period).mean()
 
 
-def calc_sma(series: pd.Series, period: int) -> pd.Series:
-    return series.rolling(window=period).mean()
+calc_sma = calc_ma
 
 
 def calc_zscore(series: pd.Series, window: int = 20) -> pd.Series:

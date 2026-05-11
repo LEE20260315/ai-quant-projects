@@ -6,6 +6,7 @@ import json
 import numpy as np
 import pandas as pd
 from datetime import datetime
+from itertools import product
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -17,19 +18,73 @@ from stress_test_enhanced import EnhancedStressTester
 
 SYMBOLS = ['TA', 'RM', 'MA']
 
-PARAMS = OptimizedParams(
+PARAM_GRID = {
+    'percentile_window': [30, 40, 50],
+    'long_entry_pct': [0.20, 0.25, 0.30],
+    'short_entry_pct': [0.70, 0.75, 0.80],
+    'atr_stop_mult': [1.2, 1.5, 1.8],
+    'atr_take_mult': [1.5, 2.0, 2.5],
+    'max_hold_days': [5, 7, 10],
+}
+
+WF_FOLDS = [
+    ('2020-01-01', '2022-12-31', '2023-01-01', '2023-12-31'),
+    ('2020-01-01', '2023-12-31', '2024-01-01', '2024-06-30'),
+    ('2021-01-01', '2023-12-31', '2024-01-01', '2024-06-30'),
+    ('2021-01-01', '2024-06-30', '2024-07-01', '2025-06-30'),
+    ('2022-01-01', '2024-12-31', '2025-01-01', '2025-12-31'),
+]
+
+DEFAULT_PARAMS = OptimizedParams(
     percentile_window=40, long_entry_pct=0.25, short_entry_pct=0.75,
     atr_stop_mult=1.5, atr_take_mult=2.0, max_hold_days=7,
     trend_filter_enabled=True,
 )
 
-WF_FOLDS = [
-    ('2020-01-01', '2022-12-31', '2023-01-01', '2023-12-31'),
-    ('2020-01-01', '2023-12-31', '2024-01-01', '2024-12-31'),
-    ('2021-01-01', '2023-12-31', '2024-01-01', '2024-12-31'),
-    ('2021-01-01', '2024-06-30', '2024-07-01', '2025-12-31'),
-    ('2022-01-01', '2024-12-31', '2025-01-01', '2025-12-31'),
-]
+
+def _grid_search_is(is_start, is_end, max_combos=30):
+    keys = list(PARAM_GRID.keys())
+    values = list(PARAM_GRID.values())
+    all_combos = list(product(*values))
+    np.random.seed(42)
+    if len(all_combos) > max_combos:
+        indices = np.random.choice(len(all_combos), max_combos, replace=False)
+        sampled = [all_combos[i] for i in indices]
+    else:
+        sampled = all_combos
+
+    best_sharpe = -999
+    best_params = DEFAULT_PARAMS
+
+    config = PortfolioConfig(
+        start_date=is_start, end_date=is_end,
+        dynamic_position_enabled=True,
+        volatility_target_enabled=True,
+        symbol_rotation_enabled=True,
+    )
+
+    for combo in sampled:
+        params = OptimizedParams(
+            percentile_window=combo[0],
+            long_entry_pct=combo[1],
+            short_entry_pct=combo[2],
+            atr_stop_mult=combo[3],
+            atr_take_mult=combo[4],
+            max_hold_days=combo[5],
+            trend_filter_enabled=True,
+        )
+        try:
+            engine = FusionBacktestEngine(config=config, fusion_enabled=False)
+            result = engine.run(SYMBOLS, params, is_start, is_end)
+            sharpe = result.get('sharpe_ratio', -999)
+            trades = result.get('total_trades', 0)
+            if trades >= 5 and sharpe > best_sharpe:
+                best_sharpe = sharpe
+                best_params = params
+        except Exception:
+            continue
+
+    return best_params, best_sharpe
 
 
 def run_full_period_backtest():
@@ -45,10 +100,10 @@ def run_full_period_backtest():
     )
 
     baseline_engine = FusionBacktestEngine(config=config, fusion_enabled=False)
-    baseline = baseline_engine.run(SYMBOLS, PARAMS, '2020-01-01', '2025-12-31')
+    baseline = baseline_engine.run(SYMBOLS, DEFAULT_PARAMS, '2020-01-01', '2025-12-31')
 
     fusion_engine = FusionBacktestEngine(config=config, fusion_enabled=True)
-    fused = fusion_engine.run(SYMBOLS, PARAMS, '2020-01-01', '2025-12-31')
+    fused = fusion_engine.run(SYMBOLS, DEFAULT_PARAMS, '2020-01-01', '2025-12-31')
 
     print(f'\n  基线: 收益={baseline.get("total_return_pct", 0):+.1f}%, '
           f'夏普={baseline.get("sharpe_ratio", 0):.2f}, '
@@ -62,12 +117,20 @@ def run_full_period_backtest():
 
 def walk_forward_validation():
     print('\n' + '=' * 60)
-    print('Walk-Forward 验证 (5折)')
+    print('Walk-Forward 验证 (5折, IS期参数优化)')
     print('=' * 60)
 
     results = []
     for i, (is_start, is_end, oos_start, oos_end) in enumerate(WF_FOLDS):
         print(f'\n--- Fold {i+1}/5: IS={is_start}~{is_end}, OOS={oos_start}~{oos_end} ---')
+
+        print(f'  IS期参数搜索...')
+        is_best_params, is_best_sharpe = _grid_search_is(is_start, is_end)
+        print(f'  IS最优: pct_win={is_best_params.percentile_window}, '
+              f'long_pct={is_best_params.long_entry_pct}, '
+              f'short_pct={is_best_params.short_entry_pct}, '
+              f'sl={is_best_params.atr_stop_mult}, tp={is_best_params.atr_take_mult}, '
+              f'hold={is_best_params.max_hold_days}, IS夏普={is_best_sharpe:.2f}')
 
         config = PortfolioConfig(start_date=oos_start, end_date=oos_end,
                                 dynamic_position_enabled=True,
@@ -75,10 +138,10 @@ def walk_forward_validation():
                                 symbol_rotation_enabled=True)
 
         baseline_engine = FusionBacktestEngine(config=config, fusion_enabled=False)
-        baseline = baseline_engine.run(SYMBOLS, PARAMS, oos_start, oos_end)
+        baseline = baseline_engine.run(SYMBOLS, is_best_params, oos_start, oos_end)
 
         fusion_engine = FusionBacktestEngine(config=config, fusion_enabled=True)
-        fused = fusion_engine.run(SYMBOLS, PARAMS, oos_start, oos_end)
+        fused = fusion_engine.run(SYMBOLS, is_best_params, oos_start, oos_end)
 
         b_sharpe = baseline.get('sharpe_ratio', 0)
         f_sharpe = fused.get('sharpe_ratio', 0)
@@ -87,12 +150,21 @@ def walk_forward_validation():
         b_dd = baseline.get('max_drawdown_pct', 0)
         f_dd = fused.get('max_drawdown_pct', 0)
 
-        print(f'  基线: 收益={b_ret:+.1f}%, 夏普={b_sharpe:.2f}, 回撤={b_dd:.1f}%')
-        print(f'  融合: 收益={f_ret:+.1f}%, 夏普={f_sharpe:.2f}, 回撤={f_dd:.1f}%')
+        print(f'  OOS基线: 收益={b_ret:+.1f}%, 夏普={b_sharpe:.2f}, 回撤={b_dd:.1f}%')
+        print(f'  OOS融合: 收益={f_ret:+.1f}%, 夏普={f_sharpe:.2f}, 回撤={f_dd:.1f}%')
         print(f'  改善: 收益={f_ret-b_ret:+.1f}%, 夏普={f_sharpe-b_sharpe:+.2f}')
 
         results.append({
             'fold': i+1, 'oos_period': f'{oos_start}~{oos_end}',
+            'is_best_sharpe': round(is_best_sharpe, 4),
+            'is_best_params': {
+                'percentile_window': is_best_params.percentile_window,
+                'long_entry_pct': is_best_params.long_entry_pct,
+                'short_entry_pct': is_best_params.short_entry_pct,
+                'atr_stop_mult': is_best_params.atr_stop_mult,
+                'atr_take_mult': is_best_params.atr_take_mult,
+                'max_hold_days': is_best_params.max_hold_days,
+            },
             'baseline_sharpe': b_sharpe, 'fused_sharpe': f_sharpe,
             'baseline_return': b_ret, 'fused_return': f_ret,
             'baseline_dd': b_dd, 'fused_dd': f_dd,

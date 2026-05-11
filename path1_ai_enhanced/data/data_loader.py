@@ -5,7 +5,7 @@
 数据加载器 - 复用path2的Parquet数据源，提供统一的数据接口
 
 与path2共享:
-- 相同的Parquet文件路径: D:\My project\cta_research\futures\continuous\*.parquet
+- 相同的Parquet文件路径: D:/My project/cta_research/futures/continuous/*.parquet
 - 相同的品种规格定义
 - 相同的列名标准化逻辑
 """

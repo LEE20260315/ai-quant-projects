@@ -38,6 +38,7 @@ class FusedSignal:
     path1_agreement: float
     strategy_weights: Dict[str, float]
     enhancement_applied: str
+    dominant_strategy: str = 'none'
     sl_atr_adj: float = 0.0
     tp_atr_adj: float = 0.0
     hold_days_adj: int = 0
@@ -61,7 +62,18 @@ class Path1SignalGenerator:
         df.loc[long_cond, 'dev_direction'] = 1
         df.loc[short_cond, 'dev_direction'] = -1
         df['dev_strength'] = 0.0
-        df.loc[df['dev_direction'] != 0, 'dev_strength'] = 0.5
+        mask_long = df['dev_direction'] == 1
+        mask_short = df['dev_direction'] == -1
+        if mask_long.any():
+            df.loc[mask_long, 'dev_strength'] = (
+                (0.25 - df.loc[mask_long, 'pct_rank']) / 0.25 * 0.5 +
+                (-df.loc[mask_long, 'zscore'] - 1.5) / 1.5 * 0.5
+            ).clip(0.1, 1.0)
+        if mask_short.any():
+            df.loc[mask_short, 'dev_strength'] = (
+                (df.loc[mask_short, 'pct_rank'] - 0.75) / 0.25 * 0.5 +
+                (df.loc[mask_short, 'zscore'] - 1.5) / 1.5 * 0.5
+            ).clip(0.1, 1.0)
         return df
 
     def prepare_mean_revert(self, symbol, start_date, end_date):
@@ -78,7 +90,18 @@ class Path1SignalGenerator:
         df.loc[long_cond, 'mr_direction'] = 1
         df.loc[short_cond, 'mr_direction'] = -1
         df['mr_strength'] = 0.0
-        df.loc[df['mr_direction'] != 0, 'mr_strength'] = 0.5
+        mask_long = df['mr_direction'] == 1
+        mask_short = df['mr_direction'] == -1
+        if mask_long.any():
+            df.loc[mask_long, 'mr_strength'] = (
+                (0.05 - df.loc[mask_long, 'bb_pct']) / 0.05 * 0.5 +
+                (25 - df.loc[mask_long, 'rsi']) / 25 * 0.5
+            ).clip(0.1, 1.0)
+        if mask_short.any():
+            df.loc[mask_short, 'mr_strength'] = (
+                (df.loc[mask_short, 'bb_pct'] - 0.95) / 0.05 * 0.5 +
+                (df.loc[mask_short, 'rsi'] - 75) / 25 * 0.5
+            ).clip(0.1, 1.0)
         return df
 
     def prepare_volatility(self, symbol, start_date, end_date):
@@ -97,7 +120,18 @@ class Path1SignalGenerator:
         df.loc[long_cond, 'vol_direction'] = 1
         df.loc[short_cond, 'vol_direction'] = -1
         df['vol_strength'] = 0.0
-        df.loc[df['vol_direction'] != 0, 'vol_strength'] = 0.5
+        mask_long = df['vol_direction'] == 1
+        mask_short = df['vol_direction'] == -1
+        if mask_long.any():
+            df.loc[mask_long, 'vol_strength'] = (
+                (df.loc[mask_long, 'volume_ratio'] - 1.5) / 1.5 * 0.6 +
+                (df.loc[mask_long, 'atr_ratio'] - 0.8) / 0.8 * 0.4
+            ).clip(0.1, 1.0)
+        if mask_short.any():
+            df.loc[mask_short, 'vol_strength'] = (
+                (df.loc[mask_short, 'volume_ratio'] - 1.5) / 1.5 * 0.6 +
+                (df.loc[mask_short, 'atr_ratio'] - 0.8) / 0.8 * 0.4
+            ).clip(0.1, 1.0)
         return df
 
 
@@ -125,7 +159,7 @@ class DarwinianWeightManager:
             p['wins'] += 1
         p['recent_pnls'].append(pnl)
         if len(p['recent_pnls']) > 120:
-            p['recent_pnls'] = p['recent_pnls'][-60:]
+            p['recent_pnls'] = p['recent_pnls'][-120:]
         p['current'] += pnl
         if p['current'] > p['peak']:
             p['peak'] = p['current']
@@ -139,7 +173,7 @@ class DarwinianWeightManager:
         scores = {}
         for name, p in self.performances.items():
             recent = p['recent_pnls'][-60:] if p['recent_pnls'] else []
-            sharpe = np.mean(recent) / np.std(recent) * np.sqrt(252) if len(recent) >= 5 and np.std(recent) > 0 else 0
+            sharpe = np.mean(recent) / np.std(recent) * np.sqrt(len(recent)) if len(recent) >= 5 and np.std(recent) > 0 else 0
             wr = p['wins'] / p['total_trades'] if p['total_trades'] > 0 else 0
             dd_penalty = max(0, 1 - p['max_dd'] * 2)
             trade_bonus = min(p['total_trades'] / 20, 1.0)
@@ -214,11 +248,14 @@ class SignalFusion:
             if df is None:
                 signals[sname] = StandardSignal(symbol, date, 0, 0.0, sname)
                 continue
-            row = df[df['date'] == date]
-            if row.empty:
+            if 'date' not in df.columns:
                 signals[sname] = StandardSignal(symbol, date, 0, 0.0, sname)
                 continue
-            r = row.iloc[0]
+            idx = df.index[df['date'] == date]
+            if len(idx) == 0:
+                signals[sname] = StandardSignal(symbol, date, 0, 0.0, sname)
+                continue
+            r = df.loc[idx[0]]
             dcol = dir_cols.get(sname)
             scol = str_cols.get(sname)
             d = int(r.get(dcol, 0)) if pd.notna(r.get(dcol)) else 0
@@ -269,12 +306,25 @@ class SignalFusion:
             enhancement_applied = 'no_path1_signal'
 
         confidence = min(1.0, path2_strength * (1 + path1_agreement * 0.3))
+
+        dominant_strategy = 'none'
+        if path1_signals:
+            best_contrib = 0.0
+            for sname, sig in path1_signals.items():
+                if sig.direction != 0:
+                    w = weights.get(sname, 1.0)
+                    contrib = abs(sig.direction * sig.strength * w)
+                    if contrib > best_contrib:
+                        best_contrib = contrib
+                        dominant_strategy = sname
+
         return FusedSignal(
             symbol=symbol, date=date, direction=path2_direction,
             strength=path2_strength, confidence=confidence,
             path2_direction=path2_direction, path1_consensus=path1_consensus,
             path1_agreement=path1_agreement, strategy_weights=weights,
             enhancement_applied=enhancement_applied,
+            dominant_strategy=dominant_strategy,
             sl_atr_adj=sl_adj, tp_atr_adj=tp_adj, hold_days_adj=hold_adj,
         )
 

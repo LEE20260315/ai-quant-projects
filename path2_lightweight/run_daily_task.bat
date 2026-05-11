@@ -1,13 +1,20 @@
 @echo off
 chcp 65001 >nul 2>&1
 
-set PYTHON=C:\Python314\python.exe
-set SCRIPT=D:\My project\ai-quant-projects-merged\path2_lightweight\live_tracker.py
-set LOGDIR=D:\My project\ai-quant-projects-merged\path2_lightweight\tracking
+set PYTHON=python
+set BASEDIR=%~dp0
+set LOGDIR=%BASEDIR%tracking
 
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
 
 echo [%date% %time%] Starting daily tracking... >> "%LOGDIR%\task_log.txt"
-cd /d "D:\My project\ai-quant-projects-merged\path2_lightweight"
-"%PYTHON%" "%SCRIPT%" daily >> "%LOGDIR%\task_log.txt" 2>&1
+cd /d "%BASEDIR%"
+"%PYTHON%" "%BASEDIR%live_tracker.py" daily >> "%LOGDIR%\task_log.txt" 2>&1
 echo [%date% %time%] Daily tracking completed. >> "%LOGDIR%\task_log.txt"
+
+for /f "tokens=1" %%i in ('%PYTHON% -c "from datetime import datetime; print(datetime.now().weekday())"') do set DOW=%%i
+if "%DOW%"=="4" (
+    echo [%date% %time%] Starting weekly report... >> "%LOGDIR%\task_log.txt"
+    "%PYTHON%" "%BASEDIR%weekly_report.py" >> "%LOGDIR%\task_log.txt" 2>&1
+    echo [%date% %time%] Weekly report completed. >> "%LOGDIR%\task_log.txt"
+)

@@ -1,0 +1,150 @@
+{
+  "initial_capital": 10000,
+  "final_capital": 3175.02,
+  "total_return_pct": -68.25,
+  "annual_return_pct": -17.42,
+  "max_drawdown_pct": 68.25,
+  "sharpe_ratio": -0.8783,
+  "calmar_ratio": -0.2552,
+  "total_trades": 7,
+  "win_rate_pct": 0.0,
+  "profit_factor": 0.0,
+  "avg_win": 0,
+  "avg_loss": 975.0,
+  "symbols": [
+    "TA",
+    "RM",
+    "MA"
+  ],
+  "start_date": "2020-01-01",
+  "end_date": "2025-12-31",
+  "trades": [
+    {
+      "symbol": "RM",
+      "direction": 1,
+      "entry_date": "2020-03-02 00:00:00",
+      "exit_date": "2020-03-09 00:00:00",
+      "entry_price": 2370.0,
+      "exit_price": 2285.1428571428573,
+      "size": 1,
+      "pnl": -864.8644285714266,
+      "hold_days": 7,
+      "exit_reason": "stop_loss",
+      "strategy": "volatility"
+    },
+    {
+      "symbol": "TA",
+      "direction": 1,
+      "entry_date": "2020-03-09 00:00:00",
+      "exit_date": "2020-03-10 00:00:00",
+      "entry_price": 4078.0,
+      "exit_price": 3939.4,
+      "size": 1,
+      "pnl": -707.0304499999995,
+      "hold_days": 1,
+      "exit_reason": "stop_loss",
+      "strategy": "deviation"
+    },
+    {
+      "symbol": "MA",
+      "direction": 1,
+      "entry_date": "2020-03-09 00:00:00",
+      "exit_date": "2020-03-10 00:00:00",
+      "entry_price": 1918.0,
+      "exit_price": 1820.5428571428572,
+      "size": 1,
+      "pnl": -987.6563285714279,
+      "hold_days": 1,
+      "exit_reason": "stop_loss",
+      "strategy": "deviation"
+    },
+    {
+      "symbol": "TA",
+      "direction": 1,
+      "entry_date": "2020-03-10 00:00:00",
+      "exit_date": "2020-03-13 00:00:00",
+      "entry_price": 3930.0,
+      "exit_price": 3754.3714285714286,
+      "size": 1,
+      "pnl": -891.5905071428568,
+      "hold_days": 3,
+      "exit_reason": "stop_loss",
+      "strategy": "deviation"
+    },
+    {
+      "symbol": "MA",
+      "direction": 1,
+      "entry_date": "2020-03-10 00:00:00",
+      "exit_date": "2020-03-13 00:00:00",
+      "entry_price": 1911.0,
+      "exit_price": 1797.857142857143,
+      "size": 1,
+      "pnl": -1144.409571428571,
+      "hold_days": 3,
+      "exit_reason": "stop_loss",
+      "strategy": "mean_revert"
+    },
+    {
+      "symbol": "TA",
+      "direction": 1,
+      "entry_date": "2020-03-13 00:00:00",
+      "exit_date": "2020-03-18 00:00:00",
+      "entry_price": 3852.0,
+      "exit_price": 3658.885714285714,
+      "size": 1,
+      "pnl": -978.7154785714293,
+      "hold_days": 5,
+      "exit_reason": "stop_loss",
+      "strategy": "mean_revert"
+    },
+    {
+      "symbol": "MA",
+      "direction": 1,
+      "entry_date": "2020-03-13 00:00:00",
+      "exit_date": "2020-03-19 00:00:00",
+      "entry_price": 1857.0,
+      "exit_price": 1733.1857142857143,
+      "size": 1,
+      "pnl": -1250.708507142857,
+      "hold_days": 6,
+      "exit_reason": "stop_loss",
+      "strategy": "mean_revert"
+    }
+  ],
+  "final_weights": {
+    "deviation": 1.0299401197604792,
+    "momentum": 0.9580838323353293,
+    "mean_revert": 1.0299401197604792,
+    "volatility": 0.9820359281437125
+  },
+  "strategy_performances": {
+    "deviation": {
+      "total_pnl": -2586.2772857142845,
+      "trades": 3,
+      "win_rate": 0.0,
+      "sharpe": 0.0,
+      "weight": 1.0299401197604792
+    },
+    "momentum": {
+      "total_pnl": 0.0,
+      "trades": 0,
+      "win_rate": 0.0,
+      "sharpe": 0.0,
+      "weight": 0.9580838323353293
+    },
+    "mean_revert": {
+      "total_pnl": -3373.8335571428574,
+      "trades": 3,
+      "win_rate": 0.0,
+      "sharpe": 0.0,
+      "weight": 1.0299401197604792
+    },
+    "volatility": {
+      "total_pnl": -864.8644285714266,
+      "trades": 1,
+      "win_rate": 0.0,
+      "sharpe": 0.0,
+      "weight": 0.9820359281437125
+    }
+  }
+}

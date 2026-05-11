@@ -169,12 +169,28 @@ class FusionBacktestEngine:
                                 f"pnl:{net_pnl:.2f}, reason:{exit_reason}, "
                                 f"fusion:{getattr(pos, 'fusion_enhancement', 'none')}, "
                                 f"capital:{capital:.2f}\n")
-                    if self.fusion_enabled and hasattr(pos, 'fusion_strategy'):
+                    if self.fusion_enabled and hasattr(pos, 'fusion_strategy') and pos.fusion_strategy != 'none':
                         self.fusion.update_darwin(pos.fusion_strategy, net_pnl)
                         self.fusion.rebalance_darwin()
                     del positions[symbol]
 
-            current_dd, peak_equity, realized_equity = self._calc_dd(capital, equity_curve)
+            unrealized_pnl = 0.0
+            for sym, pos in positions.items():
+                if sym not in all_data:
+                    continue
+                df = all_data[sym]
+                row_mask = df['date'] == current_date
+                if not row_mask.any():
+                    continue
+                row = df[row_mask].iloc[0]
+                spec = self.loader.get_spec(sym)
+                if pos.direction == 1:
+                    unrealized_pnl += (row['close'] - pos.entry_price) * spec.multiplier * pos.size
+                else:
+                    unrealized_pnl += (pos.entry_price - row['close']) * spec.multiplier * pos.size
+
+            total_equity = capital + unrealized_pnl
+            current_dd, peak_equity, realized_equity = self._calc_dd(total_equity, equity_curve)
             self.base_engine.position_manager.update_drawdown(current_dd, current_date)
             self.base_engine.volatility_manager.update_equity(realized_equity, current_date)
 
@@ -208,7 +224,7 @@ class FusionBacktestEngine:
                 positions.clear()
                 self.base_engine.position_manager.update_drawdown(current_dd, current_date)
 
-            equity_curve.append({'date': current_date, 'capital': capital})
+            equity_curve.append({'date': current_date, 'capital': total_equity})
 
             today_signals = []
             for symbol, df in all_data.items():
@@ -248,6 +264,7 @@ class FusionBacktestEngine:
                     sig['sl_atr_adj'] = fused.sl_atr_adj
                     sig['tp_atr_adj'] = fused.tp_atr_adj
                     sig['hold_days_adj'] = fused.hold_days_adj
+                    sig['dominant_strategy'] = fused.dominant_strategy
 
                     if fused.enhancement_applied != 'none':
                         fusion_log.append({
@@ -345,7 +362,7 @@ class FusionBacktestEngine:
                     )
                     pos.margin_used = actual_margin
                     pos.fusion_enhancement = sig.get('fusion_enhancement', 'none')
-                    pos.fusion_strategy = 'deviation'
+                    pos.fusion_strategy = sig.get('dominant_strategy', 'none')
                     pos.max_hold_days = max_hold
                     positions[symbol] = pos
                     current_total_margin += actual_margin

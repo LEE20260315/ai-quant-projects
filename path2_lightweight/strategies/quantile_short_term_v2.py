@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-路径二 v2：轻量级分位数短线系统 - 优化版
-核心改进（基于v1诊断结果）：
+路径二 v3：轻量级分位数短线系统 - 双模式
+核心改进（基于v2 + 实盘反馈）：
 
 1. ATR止损放宽：1.2x → 1.8x（蒙特卡罗最优区间）
 2. 移动止损触发：1% → 3%（避免过早触发）
 3. 做多信号放宽：去掉RSI<30硬性约束
-4. 趋势过滤器：200日均线过滤逆势信号
+4. 趋势过滤器：50日均线过滤逆势信号
 5. 波动率自适应止损：高波动品种更大止损倍数
 6. 超时平仓：7天 → 10天（给交易更多时间）
+7. NEW: 顺势入场规则 — 趋势市场中顺势追涨/追跌
 """
 import pandas as pd
 import numpy as np
@@ -43,9 +44,17 @@ class OptimizedParams:
     rsi_period: int = 14
     rsi_overbought: float = 70
     
-    # 趋势过滤（新增）
+    # 趋势过滤
     trend_ma_period: int = 200          # 长期趋势均线
     trend_filter_enabled: bool = True   # 是否启用趋势过滤
+
+    # 顺势交易（v3 新增）
+    trend_entry_enabled: bool = True    # 启用顺势入场
+    trend_pct_rank_high: float = 0.85   # 高位强势做多
+    trend_pct_rank_low: float = 0.15    # 低位弱势做空
+    trend_atr_stop_mult: float = 1.5    # 顺势止损(ATR)
+    trend_atr_take_mult: float = 2.0    # 顺势止盈(ATR)
+    trend_max_hold_days: int = 7        # 顺势最大持仓天数
     
     # 止损止盈（优化：放宽）
     atr_period: int = 14
@@ -102,12 +111,14 @@ class SignalType(Enum):
 class Position:
     symbol: str
     direction: int
-    entry_date: pd.Timestamp
-    entry_price: float
-    size: int
-    stop_loss: float
-    take_profit: float
+    entry_type: str = 'mean_revert'  # 'mean_revert' or 'trend'
+    entry_date: pd.Timestamp = None
+    entry_price: float = 0
+    size: int = 0
+    stop_loss: float = 0
+    take_profit: float = 0
     highest_profit_pct: float = 0.0
+    max_hold_days: int = 10
 
 
 # ============================================================
@@ -145,32 +156,55 @@ class OptimizedQuantileStrategy:
         
         # 成交量均线（用于流动性过滤）
         df['volume_ma'] = calc_ma(df['volume'], 20)
-        
-        # 趋势过滤：200日均线
+
+        # EMA20（短期趋势确认）
+        df['ema20'] = calc_ema(df['close'], 20)
+
+        # ATR均线（波动率扩张检测）
+        atr_temp = calc_atr(df, self.params.atr_period)
+        df['atr_ma'] = calc_ma(atr_temp, 20)
+
+        # 趋势过滤
         if self.params.trend_filter_enabled:
             df['trend_ma'] = calc_ma(df['close'], self.params.trend_ma_period)
-            # 趋势方向：价格在200日均线上方为上升趋势
             df['in_uptrend'] = df['close'] > df['trend_ma']
-        
-        # 做多信号（优化：去掉RSI<30硬性约束）
+
+        # 逆势回归做多（均值回归）
         df['signal_long'] = (
             (df['pct_rank'] < self.params.long_entry_pct) &
             (df['ema_fast'] > df['ema_slow'])
-            # 去掉了 RSI < 30 的约束
         )
-        
-        # 做空信号（保持不变）
+
+        # 逆势回归做空
         df['signal_short'] = (
             (df['pct_rank'] > self.params.short_entry_pct) &
             (df['rsi'] > self.params.rsi_overbought)
         )
-        
-        # 趋势过滤：逆势信号过滤
+
         if self.params.trend_filter_enabled:
-            # 上升趋势中不做空（过滤逆势做空）
             df['signal_short'] = df['signal_short'] & (~df['in_uptrend'])
-            # 下降趋势中不做多（过滤逆势做多）
             df['signal_long'] = df['signal_long'] & (df['in_uptrend'])
+
+        # 顺势做多（v3 新增）：高位强势 + 趋势向上 + 波动扩张
+        if self.params.trend_entry_enabled:
+            df['signal_trend_long'] = False
+            df['signal_trend_short'] = False
+            if 'in_uptrend' in df.columns:
+                df['signal_trend_long'] = (
+                    (df['pct_rank'] > self.params.trend_pct_rank_high) &
+                    (df['close'] > df['trend_ma']) &
+                    (df['ema20'] > df['trend_ma']) &
+                    (atr_temp > df['atr_ma'])
+                )
+                df['signal_trend_short'] = (
+                    (df['pct_rank'] < self.params.trend_pct_rank_low) &
+                    (df['close'] < df['trend_ma']) &
+                    (df['ema20'] < df['trend_ma']) &
+                    (atr_temp > df['atr_ma'])
+                )
+        else:
+            df['signal_trend_long'] = False
+            df['signal_trend_short'] = False
         
         return df
     
@@ -229,7 +263,8 @@ class OptimizedQuantileStrategy:
                 # 3. 超时平仓
                 if exit_reason is None:
                     hold_days = (current_date - position.entry_date).days
-                    if hold_days >= self.params.max_hold_days:
+                    max_hold = getattr(position, 'max_hold_days', self.params.max_hold_days)
+                    if hold_days >= max_hold:
                         exit_reason = f'超时{hold_days}天'
                 
                 # 4. 移动止损
@@ -302,47 +337,65 @@ class OptimizedQuantileStrategy:
                     exec_price = next_row['open']
                     exec_date = next_row['date']
                     
-                    # 计算止损止盈
                     atr = row['atr']
                     if pd.isna(atr):
                         continue
-                    
+
+                    margin_needed = spec.calc_margin(exec_price)
+                    if margin_needed > capital * 0.35:
+                        continue
+
+                    sig_type = None
+                    entry_type = 'mean_revert'
+                    _stop_mult = atr_stop_mult
+                    _take_mult = self.params.atr_take_mult
+                    _max_hold = self.params.max_hold_days
+
+                    if row.get('signal_trend_long') and self.params.trend_entry_enabled:
+                        sig_type = 1
+                        entry_type = 'trend'
+                        _stop_mult = self.params.trend_atr_stop_mult
+                        _take_mult = self.params.trend_atr_take_mult
+                        _max_hold = self.params.trend_max_hold_days
+                    elif row.get('signal_trend_short') and self.params.trend_entry_enabled:
+                        sig_type = -1
+                        entry_type = 'trend'
+                        _stop_mult = self.params.trend_atr_stop_mult
+                        _take_mult = self.params.trend_atr_take_mult
+                        _max_hold = self.params.trend_max_hold_days
+                    elif row.get('signal_long'):
+                        sig_type = 1
+                    elif row.get('signal_short'):
+                        sig_type = -1
+
+                    if sig_type is None:
+                        continue
+
                     stop_distance = max(
-                        atr * atr_stop_mult,
+                        atr * _stop_mult,
                         exec_price * self.params.min_stop_pct
                     )
                     stop_distance = min(stop_distance, exec_price * self.params.max_stop_pct)
-                    take_distance = atr * self.params.atr_take_mult
-                    
-                    today_signals = [row]
-                    for sig_row in today_signals:
-                        # 保证金检查
-                        margin_needed = spec.calc_margin(exec_price)
-                        if margin_needed > capital * 0.35:
-                            continue
-                        
-                        # 确定信号类型
-                        if sig_row.get('signal_long'):
-                            sig_type = 1
-                            actual_sl = exec_price * (1 - self.params.slippage_rate) - stop_distance
-                            actual_tp = exec_price * (1 + self.params.slippage_rate) + take_distance
-                        elif sig_row.get('signal_short'):
-                            sig_type = -1
-                            actual_sl = exec_price * (1 + self.params.slippage_rate) + stop_distance
-                            actual_tp = exec_price * (1 - self.params.slippage_rate) - take_distance
-                        else:
-                            continue
-                        
-                        position = Position(
-                            symbol=symbol,
-                            direction=sig_type,
-                            entry_date=exec_date,
-                            entry_price=exec_price,
-                            size=1,
-                            stop_loss=actual_sl,
-                            take_profit=actual_tp,
-                        )
-                        break
+                    take_distance = atr * _take_mult
+
+                    if sig_type == 1:
+                        actual_sl = exec_price * (1 - self.params.slippage_rate) - stop_distance
+                        actual_tp = exec_price * (1 + self.params.slippage_rate) + take_distance
+                    else:
+                        actual_sl = exec_price * (1 + self.params.slippage_rate) + stop_distance
+                        actual_tp = exec_price * (1 - self.params.slippage_rate) - take_distance
+
+                    position = Position(
+                        symbol=symbol,
+                        direction=sig_type,
+                        entry_type=entry_type,
+                        entry_date=exec_date,
+                        entry_price=exec_price,
+                        size=1,
+                        stop_loss=actual_sl,
+                        take_profit=actual_tp,
+                        max_hold_days=_max_hold,
+                    )
             
             # 权益记录
             equity_curve.append({

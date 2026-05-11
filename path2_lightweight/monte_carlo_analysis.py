@@ -54,6 +54,10 @@ class MonteCarloAnalyzer:
 
     def block_bootstrap(self, pnl_list, target_length):
         n = len(pnl_list)
+        if n == 0 or target_length <= 0:
+            return []
+        if n <= self.block_size:
+            return (pnl_list * ((target_length // n) + 1))[:target_length]
         result = []
         while len(result) < target_length:
             start = np.random.randint(0, n)
@@ -80,8 +84,12 @@ class MonteCarloAnalyzer:
                 break
         return capital, max_dd
 
-    def run_analysis(self, trades, target_trades=100, bankruptcy_threshold=0.5):
+    def run_analysis(self, trades, target_trades=100, bankruptcy_threshold=0.5,
+                     avg_days_per_trade=7):
         pnl_list = [t['pnl'] for t in trades]
+        if not pnl_list:
+            return {}, {}
+
         win_pnl = [p for p in pnl_list if p > 0]
         loss_pnl = [p for p in pnl_list if p <= 0]
 
@@ -109,6 +117,9 @@ class MonteCarloAnalyzer:
             if md >= bankruptcy_threshold:
                 bankruptcies += 1
 
+        total_trading_days = target_trades * avg_days_per_trade
+        trading_years = max(total_trading_days / 252, 0.1)
+
         results = {
             'bankruptcy_prob': float(bankruptcies / self.num_simulations),
             'avg_final_capital': float(np.mean(final_capitals)),
@@ -117,7 +128,7 @@ class MonteCarloAnalyzer:
             'p95_max_drawdown': float(np.percentile(max_drawdowns, 95)),
             'p99_max_drawdown': float(np.percentile(max_drawdowns, 99)),
             'profit_prob': float(sum(1 for c in final_capitals if c > self.initial_capital) / self.num_simulations),
-            'avg_annual_return': float((np.mean(final_capitals) / self.initial_capital) ** (252 / (target_trades * 10)) - 1),
+            'avg_annual_return': float((np.mean(final_capitals) / self.initial_capital) ** (1 / trading_years) - 1),
         }
 
         return stats, results

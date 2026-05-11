@@ -14,6 +14,8 @@ try:
 except ImportError:
     AKSHARE_AVAILABLE = False
 
+from config import FUTURES_DATA_DIR
+
 
 SYMBOLS_MAP = {
     'TA': {'name': 'PTA', 'ak_code': 'TA0'},
@@ -21,7 +23,7 @@ SYMBOLS_MAP = {
     'MA': {'name': '甲醇', 'ak_code': 'MA0'},
 }
 
-PARQUET_DIR = r'D:\My project\cta_research\futures\continuous'
+PARQUET_DIR = FUTURES_DATA_DIR
 
 
 def fetch_futures_daily(symbol_code, days=2000):
@@ -69,7 +71,13 @@ def update_parquet_data(symbols=None):
     for sym in symbols:
         info = SYMBOLS_MAP.get(sym, {})
         ak_code = info.get('ak_code', f'{sym}0')
-        parquet_file = os.path.join(PARQUET_DIR, f'{sym}.parquet')
+        parquet_file = os.path.join(PARQUET_DIR, f'{sym}_main.parquet')
+
+        legacy_file = os.path.join(PARQUET_DIR, f'{sym}.parquet')
+        if not os.path.exists(parquet_file) and os.path.exists(legacy_file):
+            import shutil
+            shutil.move(legacy_file, parquet_file)
+            print(f'  [MIGRATE] {sym}.parquet -> {sym}_main.parquet')
 
         existing_df = None
         if os.path.exists(parquet_file):

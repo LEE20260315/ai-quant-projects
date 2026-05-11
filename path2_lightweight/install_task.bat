@@ -1,16 +1,20 @@
 @echo off
-REM 安装Windows定时任务 - 每个交易日15:30自动运行实盘跟踪
-REM 需要以管理员身份运行此脚本
-
-schtasks /create /tn "QuantFusion_Daily" /tr "D:\My project\ai-quant-projects-merged\path2_lightweight\run_daily_task.bat" /sc weekly /d MON,TUE,WED,THU,FRI /st 15:30 /f
+set SCRIPT_DIR=%~dp0
+schtasks /create /tn "QuantFusion_Daily" /tr "%SCRIPT_DIR%run_daily_task.bat" /sc weekly /d MON,TUE,WED,THU,FRI /st 15:30 /f
 
 echo.
-echo 定时任务已创建:
-echo   名称: QuantFusion_Daily
-echo   时间: 每周一至周五 15:30
-echo   脚本: run_daily_task.bat
+echo ==============================================
+echo QuantFusion v1.3 Daily Task Installer
+echo ==============================================
 echo.
-echo 查看任务: schtasks /query /tn "QuantFusion_Daily"
-echo 删除任务: schtasks /delete /tn "QuantFusion_Daily" /f
-echo 手动运行: schtasks /run /tn "QuantFusion_Daily"
+echo   Task Name:  QuantFusion_Daily
+echo   Schedule:   Mon-Fri 15:30
+echo   Script:     %SCRIPT_DIR%run_daily_task.bat
+echo.
+echo   View task:  schtasks /query /tn "QuantFusion_Daily"
+echo   Delete:     schtasks /delete /tn "QuantFusion_Daily" /f
+echo   Run now:    schtasks /run /tn "QuantFusion_Daily"
+echo.
+echo IMPORTANT: Run this script as Administrator!
+echo.
 pause
