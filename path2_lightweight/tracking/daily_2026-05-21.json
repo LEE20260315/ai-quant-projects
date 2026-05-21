@@ -1,0 +1,17 @@
+{
+  "date": "2026-05-21",
+  "version": "v1.2",
+  "account": {
+    "capital": 10167.288,
+    "total_equity": 10347.29,
+    "unrealized_pnl": 180.0,
+    "peak_capital": 10167.288,
+    "drawdown_pct": 0.0,
+    "total_return_pct": 3.47
+  },
+  "positions": {},
+  "trade_stats": {
+    "total_trades": 1,
+    "win_rate": 100.0
+  }
+}
