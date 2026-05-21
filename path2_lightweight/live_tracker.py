@@ -19,7 +19,6 @@ from data.parquet_loader import (
 from strategies.quantile_short_term_v2 import OptimizedParams
 from fusion.signal_fusion import SignalFusion
 from data_updater import update_parquet_data, get_realtime_price, SYMBOLS_MAP
-from email_sender import send_email, generate_daily_report_html
 
 SYMBOLS = ['TA', 'RM', 'MA']
 INITIAL_CAPITAL = 10000
@@ -458,35 +457,36 @@ class LiveTracker:
 
         print(f'日报已保存: {report_file}')
 
-        print(f'\n[5/5] 发送日报邮件')
+        print(f'\n[5/5] 日报生成完成')
+
+        risk_labels = {'normal': '正常', 'level1': '一级预警', 'level2': '二级预警', 'level3': '三级危险'}
         risk_level = 'normal'
-        risk_msg = f'drawdown {dd:.1%} < 20%'
         if dd >= 0.35:
             risk_level = 'level3'
-            risk_msg = f'drawdown {dd:.1%} >= 35%, all positions closed'
         elif dd >= 0.27:
             risk_level = 'level2'
-            risk_msg = f'drawdown {dd:.1%} >= 27%, no new positions'
         elif dd >= 0.20:
             risk_level = 'level1'
-            risk_msg = f'drawdown {dd:.1%} >= 20%, half position size'
 
-        mail_report = {
-            'date': today,
-            'version': 'v1.2',
-            'account': report['account'],
-            'positions': enriched_positions,
-            'signals': signal_list,
-            'trade_stats': {
-                'total_trades': len(self.state['trade_log']),
-                'win_rate': round(sum(1 for t in self.state['trade_log'] if t.get('pnl', 0) > 0) / max(len(self.state['trade_log']), 1) * 100, 1),
-                'avg_pnl': round(np.mean([t['pnl'] for t in self.state['trade_log']]), 0) if self.state['trade_log'] else 0,
-            },
-            'risk': {'level': risk_level, 'message': risk_msg},
-        }
-        html = generate_daily_report_html(mail_report)
-        subject = f'量化融合日报 {today} | {"有信号" if signal_list else "无信号"} | {risk_level.upper()} | QuantFusion Daily'
-        send_email(subject, html)
+        trade_count = len(self.state['trade_log'])
+        win_rate = sum(1 for t in self.state['trade_log'] if t.get('pnl', 0) > 0) / max(trade_count, 1) * 100
+
+        print()
+        print(f'{"=" * 54}')
+        print(f'  📊 QuantFusion 量化融合日报 | {today}')
+        print(f'{"=" * 54}')
+        print(f'  账户权益    {total_equity:>12,.2f} 元')
+        print(f'  已实现资金  {capital:>12,.2f} 元')
+        print(f'  浮动盈亏    {total_unrealized_pnl:>+11,.2f} 元')
+        print(f'  累计收益    {(total_equity / INITIAL_CAPITAL - 1) * 100:>+10.2f}%')
+        print(f'  当前回撤    {dd * 100:>10.2f}%')
+        print(f'  风控状态    {risk_labels.get(risk_level, risk_level):>10}')
+        print(f'  持仓品种    {len(self.state["positions"]):>10}')
+        print(f'  今日信号    {len(signal_list):>10}')
+        print(f'  累计交易    {trade_count:>10} 笔')
+        if trade_count > 0:
+            print(f'  累计胜率    {win_rate:>9.1f}%')
+        print(f'{"=" * 54}')
 
         return report
 

@@ -9,8 +9,6 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from email_sender import send_email, generate_weekly_report_html
-
 TRACKING_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tracking')
 STATE_FILE = os.path.join(TRACKING_DIR, 'tracker_state.json')
 INITIAL_CAPITAL = 10000
@@ -217,15 +215,28 @@ def run_weekly_report():
         'suggestions': suggestions,
     }
 
-    html = generate_weekly_report_html(week_data)
-
     report_file = os.path.join(TRACKING_DIR, f'weekly_{week_start}_{week_end}.json')
     with open(report_file, 'w', encoding='utf-8') as f:
         json.dump(week_data, f, ensure_ascii=False, indent=2, default=str)
     print(f'Weekly report saved: {report_file}')
 
-    subject = f'量化融合周报 {week_start}~{week_end} | {trend.get("market_regime","N/A")} | {trend.get("health","N/A")} | QuantFusion Weekly'
-    send_email(subject, html, attachments=[report_file])
+    print()
+    print(f'{"=" * 54}')
+    print(f'  📊 QuantFusion 量化融合周报 | {week_start} ~ {week_end}')
+    print(f'{"=" * 54}')
+    print(f'  市场状态:    {trend.get("market_regime", "N/A"):>16}')
+    print(f'  策略健康度:  {trend.get("health", "N/A"):>16}')
+    print(f'  信号频率:    {trend.get("signal_freq", "N/A"):>16}')
+    print(f'  本周交易:    {len(week_trades):>16} 笔')
+    if findings:
+        for f in findings:
+            print(f'  🔍 {f.get("text", "")}')
+    if suggestions:
+        for s in suggestions:
+            print(f'  💡 {s.get("text", "")}')
+    print(f'{"=" * 54}')
+
+    return week_data
 
 
 if __name__ == '__main__':
