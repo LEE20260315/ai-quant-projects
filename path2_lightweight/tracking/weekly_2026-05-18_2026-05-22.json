@@ -1,0 +1,39 @@
+{
+  "week_start": "2026-05-18",
+  "week_end": "2026-05-22",
+  "daily_summaries": [
+    {
+      "date": "2026-05-22",
+      "capital": 10000,
+      "total_equity": 10000,
+      "unrealized_pnl": 0,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 1,
+      "signals_count": 0,
+      "signals": "0 signals"
+    }
+  ],
+  "trade_log": [],
+  "key_findings": [
+    {
+      "priority": "medium",
+      "text": "1 open position(s): TA"
+    }
+  ],
+  "trend_analysis": {
+    "signal_freq": "0/week (quiet)",
+    "market_regime": "Range-bound",
+    "health": "stable"
+  },
+  "suggestions": [
+    {
+      "text": "Market in range-bound mode: consider widening PctRank entry thresholds (0.20/0.80) to capture more signals",
+      "effort": "low"
+    },
+    {
+      "text": "No trades generated: evaluate if current PctRank thresholds (0.25/0.75) are too strict for current market",
+      "effort": "low"
+    }
+  ]
+}

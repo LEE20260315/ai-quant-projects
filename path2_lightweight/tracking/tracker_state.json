@@ -100,6 +100,15 @@
       "drawdown": 0.0,
       "return_pct": 0.0,
       "positions": 1
+    },
+    {
+      "date": "2026-05-22",
+      "capital": 10000,
+      "total_equity": 10000,
+      "unrealized_pnl": 0,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 1
     }
   ],
   "start_date": "2026-04-23",
