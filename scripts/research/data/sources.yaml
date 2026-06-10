@@ -1,0 +1,118 @@
+# =============================================================================
+# 期货基本面信源白名单 + 黑名单
+# 字段：name / tier / url_pattern / reliability
+#       reliability: high（官方/数据）/ medium（行业付费）/ low（黑名单）
+# =============================================================================
+
+meta:
+  updated: 2026-06-10
+  policy: "三源印证：≥3 独立信源才标 verified=true"
+
+# ---------- 🟢 官方/数据类（高可信） ----------
+official_sources:
+  - name: "大连商品交易所公告"
+    url: "http://www.dce.com.cn/"
+    reliability: high
+    covers: [C, M, Y, P, JM, I, J, BB, FB, LH, PP, L, V, EG, EB, CS, RR]
+
+  - name: "上海期货交易所公告"
+    url: "https://www.shfe.com.cn/"
+    reliability: high
+    covers: [CU, AL, ZN, PB, AU, AG, NI, SN, RB, WR, HC, SS, FU, BU, RU, SP, AO, AD, AC, BC]
+
+  - name: "郑州商品交易所公告"
+    url: "http://www.czce.com.cn/"
+    reliability: high
+    covers: [SR, CF, TA, MA, FG, SA, OI, RM, ZC, SM, SF, UR, LR, AP, CJ, PK, EC, PR]
+
+  - name: "广州期货交易所公告"
+    url: "http://www.gfex.com.cn/"
+    reliability: high
+    covers: [SI, LC, BRF]
+
+  - name: "上海国际能源交易中心"
+    url: "https://www.ine.cn/"
+    reliability: high
+    covers: [SC, LU, NR, BC]
+
+  - name: "中国证监会"
+    url: "http://www.csrc.gov.cn/"
+    reliability: high
+    covers: [ALL]
+
+  - name: "国家统计局"
+    url: "http://www.stats.gov.cn/"
+    reliability: high
+    covers: [ALL]
+
+  - name: "农业农村部"
+    url: "http://www.moa.gov.cn/"
+    reliability: high
+    covers: [C, M, Y, P, CF, SR, RM, CJ, AP, LH, J]
+
+  - name: "海关总署"
+    url: "http://www.customs.gov.cn/"
+    reliability: high
+    covers: [CU, AL, NI, I, M, Y, P, SR, CF, RM]
+
+  - name: "USDA 美国农业部"
+    url: "https://www.usda.gov/"
+    reliability: high
+    covers: [C, M, Y, P, SR, CF, RM]
+
+  - name: "FAO 联合国粮农组织"
+    url: "https://www.fao.org/"
+    reliability: high
+    covers: [C, M, Y, P, SR, CF, RM]
+
+# ---------- 🟡 行业付费类（中等可信，需交叉） ----------
+paid_sources:
+  - name: "Wind 资讯"
+    reliability: medium
+    covers: [ALL]
+
+  - name: "同花顺"
+    reliability: medium
+    covers: [ALL]
+
+  - name: "文华财经"
+    reliability: medium
+    covers: [ALL]
+
+  - name: "卓创资讯"
+    reliability: medium
+    covers: [化工, 能源, 农产品]
+
+  - name: "Mysteel 钢联"
+    reliability: medium
+    covers: [RB, I, HC, SS, JM, J]
+
+  - name: "天下粮仓"
+    reliability: medium
+    covers: [C, M, Y, P, SR, CF, RM, OI]
+
+  - name: "中金所研报"
+    reliability: medium
+    covers: [ALL]
+
+  - name: "中期协研报"
+    reliability: medium
+    covers: [ALL]
+
+# ---------- 🔴 黑名单（低质信源，跳过） ----------
+blacklisted:
+  - pattern: "mp.weixin.qq.com"   # 微信公众号
+    reason: "立场可能带仓位，标题党普遍"
+  - pattern: "toutiao.com/group"  # 今日头条自媒体
+    reason: "作者水平参差，需一手源印证"
+  - pattern: "weibo.com"          # 微博
+    reason: "情绪化、滞后"
+  - pattern: "qq.com"             # QQ 群/兴趣部落
+    reason: "未经核实的消息聚合"
+
+# =============================================================================
+# 使用方法
+# python scripts/research/fundamental_events.py --init   # 用此文件初始化
+# python scripts/research/fundamental_events.py --list  # 列出白名单
+# python scripts/research/fundamental_events.py --validate <url>  # 校验信源
+# =============================================================================

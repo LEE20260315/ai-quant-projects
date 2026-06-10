@@ -1,0 +1,145 @@
+# =============================================================================
+# 2026 期货基本面事件清单（手工基线）
+# 用途：fundamental_events.py / cross_filter.py 共用
+# 字段：title / date / sources / affected_symbols / direction / strength / verified
+#       1=噪音 / 2=弱影响 / 3=中等 / 4=较大 / 5=结构性黑天鹅
+#       direction: bullish / bearish / neutral
+#       verified: true（≥3 独立源）/ false（1-2 源，待持续跟踪）
+# =============================================================================
+
+meta:
+  updated: 2026-06-10
+  source_policy: "三源印证：≥3 独立信源才标 verified=true"
+  reliability_tiers:
+    high: [official, exchange, government, usda, fao]
+    medium: [wind, paid_data, exchange_research]
+
+events:
+
+  # ---------- 能源/化工链 ----------
+  - title: 2026 年 3 月 2 日 伊朗局势升级，国内 12 品种涨停
+    date: 2026-03-02
+    sources:
+      - {url: "https://m.toutiao.com/group/7612991129369297443/", tier: medium}
+      - {url: "https://m.toutiao.com/group/7622142811667825152/", tier: medium}
+    affected_symbols: [FU, BU, MA, TA, AG, AU, SC, EC]
+    direction: bullish
+    strength: 4
+    verified: false  # 仅 2 个公开信源，需补：交易所公告 + 主流财经媒体
+    notes: 能源化工 + 贵金属同步冲高。地缘黑天鹅触发。
+
+  - title: 2026 年 5 月底 霍尔木兹海峡运输紧张，原油系再度走强
+    date: 2026-05-28
+    sources:
+      - {url: "https://m.toutiao.com/group/7632308811037934115/", tier: medium}
+    affected_symbols: [FU, BU, SC, MA, TA]
+    direction: bullish
+    strength: 3
+    verified: false
+    notes: "原油与金银分化（夜盘原油涨、金银跌），化工链走强。"
+
+  # ---------- 厄尔尼诺 / 天气链 ----------
+  - title: 2026 年 厄尔尼诺事件高概率发生（IRI 预测发生概率 98%）
+    date: 2026-05-15
+    sources:
+      - {url: "https://m.toutiao.com/group/7629975766020653608/", tier: medium}
+      - {url: "https://m.toutiao.com/group/7641882948010066474/", tier: medium}
+      - {url: "https://m.toutiao.com/group/7630943289243451938/", tier: medium}
+    affected_symbols: [SR, P, CF, Y, M, C, RM]
+    direction: bullish
+    strength: 4
+    verified: true  # 3 源印证通过
+    notes: 南方 4 月近 40℃ 高温，北方干旱/暴雨并存。糖/棕榈油/棉花/豆类首当其冲。
+
+  - title: 2026 年 7-8 月 新疆高温，棉花减产风险
+    date: 2026-05-29
+    sources:
+      - {url: "https://m.toutiao.com/group/7619683149701857807/", tier: medium}
+    affected_symbols: [CF, CJ]
+    direction: bullish
+    strength: 3
+    verified: false
+    notes: "研报棉花低多，目标 18600（当前 15830）。但需补新疆气象局 + USDA 报告。"
+
+  - title: 2026 年 云南/四川水电下降 20-40%，电解铝成本推升
+    date: 2026-05-29
+    sources:
+      - {url: "https://m.toutiao.com/group/7623584045922566706/", tier: medium}
+    affected_symbols: [AL]
+    direction: bullish
+    strength: 3
+    verified: false
+    notes: 沪铝 AL 不在 20 品种清单内，1 万小资金做不了。标记为参考。
+
+  - title: 2026 年 印尼出口管控，动力煤供应链风险
+    date: 2026-05-29
+    sources:
+      - {url: "https://m.toutiao.com/group/7623584045922566706/", tier: medium}
+    affected_symbols: [ZC, JM, I]  # 动力煤/焦煤/铁矿
+    direction: bullish
+    strength: 2
+    verified: false
+    notes: 动力煤 ETF 在国内没有直接标的，跟踪指数有偏差。
+
+  # ---------- AI / 新能源链 ----------
+  - title: AI 算力 + 新能源车驱动，铜镍主线持续
+    date: 2026-04-15
+    sources:
+      - {url: "https://m.toutiao.com/group/7623584045922566706/", tier: medium}
+      - {url: "https://m.toutiao.com/group/7632308811037934115/", tier: medium}
+    affected_symbols: [CU, NI, SI, LC]  # 铜/镍/工业硅/碳酸锂
+    direction: bullish
+    strength: 4
+    verified: false  # 仅 2 源，需补：交易所研报
+    notes: "货币宽松、产业升级、新兴需求，三主线共振。SI/LC 未下载。"
+
+  - title: 中金农产品 2026 展望：余裕渐消，缓步上扬
+    date: 2026-01-10
+    sources:
+      - {url: "https://m.toutiao.com/group/7592411002193396262/", tier: medium}
+    affected_symbols: [Y, M, C, P, SR, CF, RM]
+    direction: bullish
+    strength: 3
+    verified: false
+    notes: "中长期看好，但需 6-12 个月时间。"
+
+  # ---------- 货币 / 避险 ----------
+  - title: 2026 年 货币宽松周期延续，避险资产获支撑
+    date: 2026-02-20
+    sources:
+      - {url: "https://m.toutiao.com/group/7623584045922566706/", tier: medium}
+    affected_symbols: [AU, AG]
+    direction: bullish
+    strength: 3
+    verified: false
+    notes: 但 AG/AU 当前末段（30日已跌 14.6% / 9.4%），利好已兑现。
+
+# =============================================================================
+# 候选池（基于 7 候选结果）
+# 核心 (core) = 3 / 观察 (observation) = 4
+# =============================================================================
+
+pool:
+  core:
+    - {symbol: BU, reason: "能源链 + bull_strong + 30日+10.7% + 60日+18.4%"}
+    - {symbol: CU, reason: "AI/产业升级 + ADX 38.2 主升期"}
+    - {symbol: MA, reason: "化工弹性 + 启动期 + 振幅 64%"}
+  observation:
+    - {symbol: NI, reason: "启动期 + ADX 30.8，新爆品候选"}
+    - {symbol: TA, reason: "化工跟随品种"}
+    - {symbol: RU, reason: "启动期 + bull_strong + 季节性共振"}
+    - {symbol: CF, reason: "启动期 + 新疆 7-8 月高温 + 9-10 月抢收行情"}
+  watchlist:
+    - {symbol: AG, reason: "末段，已爆过"}
+    - {symbol: AU, reason: "末段，已爆过"}
+    - {symbol: FU, reason: "末段，60日跌 7.5%"}
+    - {symbol: P,  reason: "末段，厄尔尼诺利好已兑现"}
+    - {symbol: SR, reason: "末段，无趋势"}
+
+# =============================================================================
+# 下一步：跑脚本自动出结果
+# python scripts/research/fundamental_events.py --init   # 初始化（已完成）
+# python scripts/research/fundamental_events.py --list  # 列出所有事件
+# python scripts/research/explosive_scanner.py --top 5  # 量化扫描
+# python scripts/research/cross_filter.py               # 双轨综合筛选
+# =============================================================================

@@ -1,0 +1,34 @@
+{
+  "title": "2026年5月测试事件",
+  "timestamp": "2026-06-10 18:30:40",
+  "sources_total": 3,
+  "sources_accepted": 3,
+  "sources_skipped": 0,
+  "independent_domains": 3,
+  "verified": true,
+  "verdict": "✅ VERIFIED - 三源印证通过",
+  "accepted": [
+    {
+      "url": "https://www.shfe.com.cn/news/1",
+      "domain": "www.shfe.com.cn",
+      "tier": "official",
+      "reliability": "high",
+      "action": "ACCEPT - 官方/数据源"
+    },
+    {
+      "url": "https://www.dce.com.cn/news/2",
+      "domain": "www.dce.com.cn",
+      "tier": "official",
+      "reliability": "high",
+      "action": "ACCEPT - 官方/数据源"
+    },
+    {
+      "url": "https://www.usda.gov/news/3",
+      "domain": "www.usda.gov",
+      "tier": "official",
+      "reliability": "high",
+      "action": "ACCEPT - 官方/数据源"
+    }
+  ],
+  "skipped": []
+}
