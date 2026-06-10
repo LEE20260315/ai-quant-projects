@@ -1,0 +1,16 @@
+{
+  "date": "2026-04-22",
+  "version": "v1.1",
+  "account": {
+    "capital": 10000,
+    "peak_capital": 10000,
+    "drawdown_pct": 0.0,
+    "total_return_pct": 0.0
+  },
+  "positions": {},
+  "new_signals": [],
+  "trade_stats": {
+    "total_trades": 0,
+    "win_rate": 0.0
+  }
+}

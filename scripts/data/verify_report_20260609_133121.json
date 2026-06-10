@@ -1,0 +1,197 @@
+{
+  "timestamp": "2026-06-09T13:31:21",
+  "futures_dir": "C:\\Users\\MR.Dong\\OneDrive\\My Project\\cta_research\\futures\\continuous",
+  "window": {
+    "start": "2024-01-01",
+    "end": "2026-06-09"
+  },
+  "expected_business_days": 637,
+  "total_files": 20,
+  "total_missing_days": 1022,
+  "total_anomalies": 0,
+  "avg_coverage_pct": 91.97,
+  "health_score": 60.0,
+  "healthy": false,
+  "per_symbol": [
+    {
+      "symbol": "AG",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "AU",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "BU",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "CF",
+      "rows": 584,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 53,
+      "anomaly_count": 0,
+      "coverage_pct": 91.68
+    },
+    {
+      "symbol": "CU",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "C",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "FG",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "FU",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "IF",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "I",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "MA",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "M",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "NI",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "P",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "RB",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "RU",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "SA",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "SR",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "TA",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    },
+    {
+      "symbol": "Y",
+      "rows": 586,
+      "date_min": "2024-01-02",
+      "date_max": "2026-06-08",
+      "missing_days": 51,
+      "anomaly_count": 0,
+      "coverage_pct": 91.99
+    }
+  ]
+}

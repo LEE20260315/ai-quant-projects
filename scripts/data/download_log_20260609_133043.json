@@ -1,0 +1,176 @@
+{
+  "timestamp": "2026-06-09T13:30:43",
+  "data_source": "akshare.futures_main_sina",
+  "window": {
+    "start": "2024-01-01",
+    "end": "2026-06-09"
+  },
+  "out_dir": "C:\\Users\\MR.Dong\\OneDrive\\My Project\\cta_research\\futures\\continuous",
+  "results": [
+    {
+      "symbol": "RB",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "增量(+563)",
+      "duration_sec": 2.1
+    },
+    {
+      "symbol": "I",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    },
+    {
+      "symbol": "CU",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "增量(+563)",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "AU",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    },
+    {
+      "symbol": "AG",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    },
+    {
+      "symbol": "NI",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    },
+    {
+      "symbol": "Y",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "P",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "M",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "C",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "SR",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "CF",
+      "rows": 584,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "TA",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.9
+    },
+    {
+      "symbol": "MA",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    },
+    {
+      "symbol": "FG",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    },
+    {
+      "symbol": "SA",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.6
+    },
+    {
+      "symbol": "RU",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.8
+    },
+    {
+      "symbol": "BU",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.8
+    },
+    {
+      "symbol": "FU",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.8
+    },
+    {
+      "symbol": "IF",
+      "rows": 586,
+      "min_date": "2024-01-02",
+      "max_date": "2026-06-08",
+      "mode": "全量",
+      "duration_sec": 0.7
+    }
+  ],
+  "failed": [],
+  "succeeded": 20,
+  "skipped": 0,
+  "total": 20,
+  "success_rate": 100.0
+}

@@ -1,0 +1,11 @@
+pandas>=1.3.0
+numpy>=1.21.0
+akshare>=1.14.0
+pyarrow>=8.0.0
+fastapi>=0.100.0
+uvicorn>=0.23.0
+requests>=2.31.0
+# openctp-ctp: 真实 CTP 接口的预编译 wheel, 无需 MSVC 编译
+openctp-ctp>=6.7.11
+# ctpbee (可选): 老牌 CTP 框架, 但需要 MSVC 编译 ctpbee_api (Python 3.13+ 不再支持)
+# pip install ctpbee

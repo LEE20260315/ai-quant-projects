@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# 数据库文件
+*.db
+data/db/
+data/pricing_deviation.db
+data/backtest.db
+
+# 大型数据文件
+*.parquet
+data/*.csv
+backtest_results/*.csv
+backtest_results_live/*.csv
+
+# 大型子项目（各自独立git管理）
+Pricing deviation detection system/
+FinRobot/
+openbb/
+OpenAlice/
+ATLAS/
+
+# IDE
+.vscode/
+.claude/
+.lingma/
+.qoder/
+
+# Trae: 排除临时/缓存，但保留 specs/（spec 文档必须进 git 方便回滚）
+# 注意：必须用 .trae/* 排除内容，不能用 .trae/ 排除整个目录
+# 因为 git 不允许在父目录被排除后重新包含子文件
+.trae/*
+!.trae/specs/
+!.trae/specs/**
+
+# Temp / Dev
+nul
+*.log
+*.tmp
+nohup.out
+
+# Env
+.env
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db

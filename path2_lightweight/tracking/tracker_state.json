@@ -1,0 +1,74 @@
+{
+  "capital": 9507.42,
+  "peak_capital": 10000,
+  "positions": {
+    "MA": {
+      "direction": 1,
+      "entry_price": 2963.0,
+      "entry_date": "2026-06-09",
+      "size": 1,
+      "stop_loss": 2827.89,
+      "take_profit": 3233.21,
+      "max_hold_days": 14,
+      "margin_used": 1500.0,
+      "ctp_code": "MA607",
+      "ctp_order_id": "CTP-000000000002",
+      "fusion": "no_path1_signal",
+      "dominant_strategy": "none"
+    },
+    "TA": {
+      "direction": 1,
+      "entry_price": 6242.0,
+      "entry_date": "2026-06-10",
+      "size": 1,
+      "stop_loss": 5896.14,
+      "take_profit": 6722.36,
+      "max_hold_days": 10,
+      "margin_used": 1872.6,
+      "fusion": "no_path1_signal",
+      "dominant_strategy": "none"
+    }
+  },
+  "trade_log": [
+    {
+      "symbol": "TA",
+      "ctp_code": "TA607",
+      "direction": "long",
+      "entry_date": "2026-05-09",
+      "exit_date": "2026-06-09",
+      "entry_price": 6338.0,
+      "exit_price": 6242.0,
+      "size": 1,
+      "pnl": -492.58,
+      "hold_days": 31,
+      "exit_reason": "timeout_31",
+      "capital_after": 9507.42,
+      "fusion": "no_path1_signal",
+      "ctp_order_id": "CTP-000000000001"
+    }
+  ],
+  "daily_log": [
+    {
+      "date": "2026-06-09",
+      "capital": 9507.42,
+      "total_equity": 9507.42,
+      "unrealized_pnl": 0.0,
+      "drawdown": 4.93,
+      "return_pct": -4.93,
+      "positions": 0
+    },
+    {
+      "date": "2026-06-10",
+      "capital": 9507.42,
+      "total_equity": 9507.42,
+      "unrealized_pnl": 0,
+      "drawdown": 4.93,
+      "return_pct": -4.93,
+      "positions": 1
+    }
+  ],
+  "start_date": "2026-04-23",
+  "version": "v1.2",
+  "pending_orders": [],
+  "locked": false
+}

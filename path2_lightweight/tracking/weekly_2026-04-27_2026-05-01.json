@@ -1,0 +1,77 @@
+{
+  "week_start": "2026-04-27",
+  "week_end": "2026-05-01",
+  "daily_summaries": [
+    {
+      "date": "2026-04-27",
+      "capital": 10000,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 0,
+      "signals_count": 0,
+      "signals": "0 signals"
+    },
+    {
+      "date": "2026-04-28",
+      "capital": 10000,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 0,
+      "signals_count": 0,
+      "signals": "0 signals"
+    },
+    {
+      "date": "2026-04-29",
+      "capital": 10000,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 0,
+      "signals_count": 0,
+      "signals": "0 signals"
+    },
+    {
+      "date": "2026-04-30",
+      "capital": 10000,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 0,
+      "signals_count": 0,
+      "signals": "0 signals"
+    },
+    {
+      "date": "2026-05-01",
+      "capital": 10000,
+      "drawdown": 0.0,
+      "return_pct": 0.0,
+      "positions": 0,
+      "signals_count": 0,
+      "signals": "0 signals"
+    }
+  ],
+  "trade_log": [],
+  "key_findings": [
+    {
+      "priority": "low",
+      "text": "No open positions - market in neutral zone"
+    },
+    {
+      "priority": "medium",
+      "text": "No signals for 5 consecutive days, market may be in low-volatility regime"
+    }
+  ],
+  "trend_analysis": {
+    "signal_freq": "0/week (quiet)",
+    "market_regime": "Range-bound",
+    "health": "stable"
+  },
+  "suggestions": [
+    {
+      "text": "Market in range-bound mode: consider widening PctRank entry thresholds (0.20/0.80) to capture more signals",
+      "effort": "low"
+    },
+    {
+      "text": "No trades generated: evaluate if current PctRank thresholds (0.25/0.75) are too strict for current market",
+      "effort": "low"
+    }
+  ]
+}

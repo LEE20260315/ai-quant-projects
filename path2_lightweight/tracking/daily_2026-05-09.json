@@ -1,0 +1,28 @@
+{
+  "date": "2026-05-09",
+  "version": "v1.2",
+  "account": {
+    "capital": 10000,
+    "peak_capital": 10000,
+    "drawdown_pct": 0.0,
+    "total_return_pct": 0.0
+  },
+  "positions": {
+    "TA": {
+      "direction": 1,
+      "entry_price": 6338.0,
+      "entry_date": "2026-05-09",
+      "size": 1,
+      "stop_loss": 5998.57,
+      "take_profit": 6809.43,
+      "max_hold_days": 10,
+      "margin_used": 1901.4,
+      "fusion": "no_path1_signal",
+      "dominant_strategy": "none"
+    }
+  },
+  "trade_stats": {
+    "total_trades": 0,
+    "win_rate": 0.0
+  }
+}

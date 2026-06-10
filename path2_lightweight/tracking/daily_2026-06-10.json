@@ -1,0 +1,48 @@
+{
+  "date": "2026-06-10",
+  "version": "v1.2",
+  "account": {
+    "capital": 9507.42,
+    "total_equity": 9507.42,
+    "unrealized_pnl": 0.0,
+    "peak_capital": 10000,
+    "drawdown_pct": 4.93,
+    "total_return_pct": -4.93
+  },
+  "positions": {
+    "MA": {
+      "direction": 1,
+      "entry_price": 2963.0,
+      "entry_date": "2026-06-09",
+      "size": 1,
+      "stop_loss": 2827.89,
+      "take_profit": 3233.21,
+      "max_hold_days": 14,
+      "margin_used": 1500.0,
+      "ctp_code": "MA607",
+      "ctp_order_id": "CTP-000000000002",
+      "fusion": "no_path1_signal",
+      "dominant_strategy": "none",
+      "current_price": "2963",
+      "unrealized_pnl": 0.0
+    },
+    "TA": {
+      "direction": 1,
+      "entry_price": 6242.0,
+      "entry_date": "2026-06-10",
+      "size": 1,
+      "stop_loss": 5896.14,
+      "take_profit": 6722.36,
+      "max_hold_days": 10,
+      "margin_used": 1872.6,
+      "fusion": "no_path1_signal",
+      "dominant_strategy": "none",
+      "current_price": "6242",
+      "unrealized_pnl": 0.0
+    }
+  },
+  "trade_stats": {
+    "total_trades": 1,
+    "win_rate": 0.0
+  }
+}
