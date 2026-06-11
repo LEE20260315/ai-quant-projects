@@ -65,6 +65,15 @@
       "drawdown": 4.93,
       "return_pct": -4.93,
       "positions": 1
+    },
+    {
+      "date": "2026-06-11",
+      "capital": 9507.42,
+      "total_equity": 9897.42,
+      "unrealized_pnl": 390.0,
+      "drawdown": 4.93,
+      "return_pct": -1.03,
+      "positions": 2
     }
   ],
   "start_date": "2026-04-23",
