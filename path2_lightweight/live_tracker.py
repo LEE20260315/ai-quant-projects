@@ -27,9 +27,39 @@ INITIAL_CAPITAL = 10000
 # Bug 2 修复: 与回测 quantile_short_term_v2.py:76-77 / portfolio_backtest.py:35-36 对齐
 COMMISSION_RATE = 0.00015
 SLIPPAGE_RATE = 0.0002
-MAX_POSITIONS = 3
+MAX_POSITIONS = 5             # P0-3: 3 → 5 (1万小资金可扛, 但需配合 max_per_sector)
 MAX_POS_PCT = 0.30
 MAX_TOTAL_PCT = 0.60
+
+# P0-2: 动态品种池文件 (scripts/research/inject_pool.py 写入)
+POOL_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'data', 'pools', '2026.json'
+)
+SYMBOLS_FALLBACK = ['TA', 'RM', 'MA']  # 池空/缺失时兜底
+
+# P0-3: 7 大类分组 + 同类持仓上限 (1万小资金 抗相关风险)
+SECTOR_MAP = {
+    # 化工链
+    'BU': 'chemical', 'MA': 'chemical', 'TA': 'chemical', 'EG': 'chemical',
+    'L': 'chemical', 'PP': 'chemical', 'V': 'chemical', 'UR': 'chemical',
+    'FB': 'chemical', 'SA': 'chemical', 'FG': 'chemical', 'CS': 'chemical',
+    # 黑色
+    'RB': 'steel', 'HC': 'steel', 'I': 'steel', 'J': 'steel',
+    'JM': 'steel', 'SM': 'steel', 'SF': 'steel', 'SS': 'steel',
+    # 农产品
+    'C': 'agri', 'M': 'agri', 'Y': 'agri', 'P': 'agri', 'SR': 'agri',
+    'CF': 'agri', 'RM': 'agri', 'OI': 'agri', 'CJ': 'agri', 'AP': 'agri',
+    'LH': 'agri',
+    # 有色
+    'CU': 'metal', 'AL': 'metal', 'ZN': 'metal', 'PB': 'metal',
+    'NI': 'metal', 'SN': 'metal', 'SI': 'metal',
+    # 贵金属
+    'AU': 'precious', 'AG': 'precious',
+    # 能源
+    'FU': 'energy', 'SC': 'energy', 'LU': 'energy', 'NR': 'energy', 'BC': 'energy',
+}
+MAX_PER_SECTOR = 2  # 同 sector 持仓 ≤ 2 (避免单点风险)
 
 # Bug 4 修复: T+1 限价单相关
 LIMIT_PCT_TOLERANCE = 0.003  # 0.3% 滑点容差 (收盘价 +/- 0.3% 挂限价)
@@ -54,6 +84,37 @@ PARAMS = OptimizedParams(
 
 TRACKING_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tracking')
 os.makedirs(TRACKING_DIR, exist_ok=True)
+
+
+# ============================================================
+# P0-2: 动态品种池加载
+# ============================================================
+def load_active_pool(max_n: int = MAX_POSITIONS) -> list:
+    """从 data/pools/2026.json 读激活品种池, 返回最多 max_n 个 symbols。
+
+    优先级: core > observation > watchlist
+    池空 / 缺失 / 解析失败 → 回退 SYMBOLS_FALLBACK
+    """
+    if not os.path.exists(POOL_FILE):
+        return SYMBOLS_FALLBACK[:max_n]
+    try:
+        with open(POOL_FILE, 'r', encoding='utf-8') as f:
+            pool = json.load(f)
+    except (json.JSONDecodeError, IOError) as e:
+        print(f'  [POOL] 读 {POOL_FILE} 失败: {e}, 用 FALLBACK')
+        return SYMBOLS_FALLBACK[:max_n]
+    selected = []
+    for layer in ('core', 'observation', 'watchlist'):
+        for sym in pool.get(layer, []):
+            if sym not in selected and sym in SECTOR_MAP:  # 仅 SECTOR_MAP 收录的品种
+                selected.append(sym)
+            if len(selected) >= max_n:
+                break
+        if len(selected) >= max_n:
+            break
+    if not selected:
+        return SYMBOLS_FALLBACK[:max_n]
+    return selected
 
 
 class LiveTracker:
@@ -222,6 +283,23 @@ class LiveTracker:
         if spec is None:
             print(f'  [SKIP] {symbol}: 品种规格未找到')
             return None
+
+        # P0-3: 持仓数上限
+        if len(self.state['positions']) >= MAX_POSITIONS:
+            print(f'  [SKIP] {symbol}: 持仓数已达上限({MAX_POSITIONS})')
+            return None
+
+        # P0-3: 同 sector 持仓 ≤ MAX_PER_SECTOR (避免 1万小资金 单点风险)
+        sector = SECTOR_MAP.get(symbol, 'unknown')
+        if sector != 'unknown':
+            same_sector = sum(
+                1 for psym in self.state['positions']
+                if SECTOR_MAP.get(psym, 'unknown') == sector
+            )
+            if same_sector >= MAX_PER_SECTOR:
+                print(f'  [SKIP] {symbol}: 同类({sector})已持仓 {same_sector}/{MAX_PER_SECTOR}, '
+                      f'避免相关风险')
+                return None
 
         margin_needed = price * spec.multiplier * spec.margin_ratio
         if margin_needed > self.state['capital'] * MAX_POS_PCT:
@@ -432,11 +510,16 @@ class LiveTracker:
             print('  解除: 人工 review 后删除 state.locked 字段')
             return
 
+        # P0-2: 加载动态品种池 (data/pools/2026.json), 池空回退 FALLBACK
+        active_symbols = load_active_pool()
+        pool_source = 'POOL_FILE' if os.path.exists(POOL_FILE) else 'FALLBACK'
+        print(f'\n[POOL] 活跃品种({pool_source}, 上限 {MAX_POSITIONS}): {active_symbols}')
+
         print('\n[1/5] 处理 T+1 限价单 (昨日挂的) ...')
         self._process_pending_orders(today)
 
         print('\n[2/5] 更新日K数据...')
-        update_parquet_data(SYMBOLS)
+        update_parquet_data(active_symbols)
 
         self.loader.clear_cache()
 
@@ -465,7 +548,7 @@ class LiveTracker:
                       f'持仓{hold_days}天 | 融合={pos.get("fusion", "none")}')
 
         print(f'\n--- 信号扫描 ---')
-        self.fusion.symbols = SYMBOLS
+        self.fusion.symbols = active_symbols
         init_start = (datetime.now() - timedelta(days=500)).strftime('%Y-%m-%d')
         init_end = today
         self.fusion.initialize(init_start, init_end)
@@ -473,7 +556,7 @@ class LiveTracker:
         signal_list = []
         total_unrealized_pnl = 0
         position_snapshots = {}
-        for symbol in SYMBOLS:
+        for symbol in active_symbols:
             df = self._get_latest_data(symbol)
             if df is None or len(df) < 2:
                 print(f'  {symbol}: 数据不足')

@@ -836,3 +836,93 @@ SignalFusion: 预计算完成
 [5/5] 发送日报邮件
 [MAIL] OK: sent to 78644612@qq.com
 [周三 2026/06/10 15:30:18.23] Daily tracking completed. 
+[周三 2026/06/10 21:00:01.43] Starting daily tracking... 
+DingTalkNotifier: 未配置 webhook, 调用 send 将只记录日志.
+BarkNotifier: 未配置 BARK_KEY, 调用 send 将只记录日志.
+Exception in thread Thread-2 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Python314\Lib\threading.py", line 1024, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\subprocess.py", line 1613, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+UnicodeDecodeError: 'gbk' codec can't decode byte 0x94 in position 248: illegal multibyte sequence
+
+============================================================
+实盘跟踪日报 | 2026-06-10 | v1.2
+============================================================
+
+[1/5] 处理 T+1 限价单 (昨日挂的) ...
+
+[2/5] 更新日K数据...
+============================================================
+日K数据自动更新
+时间: 2026-06-10 21:00:11
+============================================================
+
+--- TA (PTA) ---
+  [UPDATE] 新增1条 (06-10~06-10)
+
+--- RM (菜粕) ---
+  [UPDATE] 新增1条 (06-10~06-10)
+
+--- MA (甲醇) ---
+  [UPDATE] 新增1条 (06-10~06-10)
+
+--- 更新汇总 ---
+  品种: 3个 | 更新: 3个 | 新增数据: 3条
+
+[2/5] 信号扫描与交易执行
+
+--- 账户状态 ---
+  当前资金: 9,507.42元
+  峰值资金: 10,000.00元
+  当前回撤: 4.9%
+  累计收益: -4.9%
+  持仓数量: 2
+  历史交易: 1笔
+
+--- 当前持仓 ---
+  MA: 多 | 入场价=2963 | 止损=2828 | 止盈=3233 | 持仓1天 | 融合=no_path1_signal
+  TA: 多 | 入场价=6242 | 止损=5896 | 止盈=6722 | 持仓0天 | 融合=no_path1_signal
+
+--- 信号扫描 ---
+SignalFusion: 预计算路径1策略指标...
+  TA/deviation: 329行, 0个信号
+  TA/mean_revert: 329行, 13个信号
+  TA/volatility: 329行, 29个信号
+  RM/deviation: 329行, 0个信号
+  RM/mean_revert: 329行, 1个信号
+  RM/volatility: 329行, 18个信号
+  MA/deviation: 329行, 0个信号
+  MA/mean_revert: 329行, 7个信号
+  MA/volatility: 329行, 27个信号
+SignalFusion: 预计算完成
+  TA: [持仓中] 浮盈=+300元 | PctRank=0.38 | ATR=198
+  RM: [无信号] PctRank=0.05 | ATR=31
+  MA: [持仓中] 浮盈=+90元 | PctRank=0.82 | ATR=93
+
+[3/5] 风控检查与自动执行
+  [GRN] 正常: 回撤4.9%<20%
+
+--- 权益汇总 ---
+  已实现资金: 9,507.42元
+  浮动盈亏:   +390.00元
+  账户权益:   9,897.42元
+  权益收益率: -1.03%
+
+--- 交易统计 ---
+  胜率: 0/1 (0%)
+  盈亏比: 0.00
+  期望/笔: -493元
+
+[4/5] 保存日报
+日报已保存: c:\Users\MR.Dong\OneDrive\My Project\ai-quant-projects-merged\path2_lightweight\tracking\daily_2026-06-10.json
+
+[5/5] 发送日报邮件
+[MAIL] OK: sent to 78644612@qq.com
+[周三 2026/06/10 21:00:17.00] Daily tracking completed. 

@@ -3,11 +3,11 @@
   "version": "v1.2",
   "account": {
     "capital": 9507.42,
-    "total_equity": 9507.42,
-    "unrealized_pnl": 0.0,
+    "total_equity": 9897.42,
+    "unrealized_pnl": 390.0,
     "peak_capital": 10000,
     "drawdown_pct": 4.93,
-    "total_return_pct": -4.93
+    "total_return_pct": -1.03
   },
   "positions": {
     "MA": {
@@ -23,8 +23,8 @@
       "ctp_order_id": "CTP-000000000002",
       "fusion": "no_path1_signal",
       "dominant_strategy": "none",
-      "current_price": "2963",
-      "unrealized_pnl": 0.0
+      "current_price": "2972",
+      "unrealized_pnl": 90.0
     },
     "TA": {
       "direction": 1,
@@ -37,8 +37,8 @@
       "margin_used": 1872.6,
       "fusion": "no_path1_signal",
       "dominant_strategy": "none",
-      "current_price": "6242",
-      "unrealized_pnl": 0.0
+      "current_price": "6302",
+      "unrealized_pnl": 300.0
     }
   },
   "trade_stats": {
