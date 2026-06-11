@@ -26,9 +26,10 @@ from pathlib import Path
 
 import yaml
 
-# 复用 explosive_scanner
+# 复用 explosive_scanner + fundamental_events
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from explosive_scanner import scan_all  # noqa: E402
+from fundamental_events import auto_verify, load_yaml as fe_load_yaml, SOURCES_FILE  # noqa: E402
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / 'data'
@@ -49,11 +50,17 @@ def load_yaml(path: Path) -> dict:
         return yaml.safe_load(f) or {}
 
 
-def get_fundamental_symbols(news: dict) -> dict:
-    """返回 verified=true 事件中各品种涉及的最大强度 + 方向。"""
+def get_fundamental_symbols(news: dict, sources_cfg: dict = None) -> dict:
+    """返回通过 auto_verify 校验的事件中各品种涉及的最大强度 + 方向。
+
+    P0 升级：不再信任 yaml 里的 verified 字段，每次都调用 auto_verify 实时算。
+    这样 yaml 的 verified 字段失效，逻辑单一来源。
+    """
+    if sources_cfg is None:
+        sources_cfg = fe_load_yaml(SOURCES_FILE)
     sym_data = {}
     for event in news.get('events', []):
-        if not event.get('verified', False):
+        if not auto_verify(event, sources_cfg):
             continue
         strength = event.get('strength', 0)
         direction = event.get('direction', 'neutral')
@@ -137,7 +144,16 @@ def render_markdown(candidates: list, layering: dict, top: int) -> str:
     lines.append("")
 
     # ⚠️ 反向信号警告
-    if layering['core'] == [] and layering['observation'] == [] and layering['watchlist']:
+    if not candidates:
+        lines.append("## ⚠️ 重要警告：无任何 verified 候选")
+        lines.append("")
+        lines.append("**所有基本面事件未通过信源门槛（≥3 独立域 + ≥1 official 源 + tier 权重分≥4）**。")
+        lines.append("这意味着：")
+        lines.append("- 当前所有公开信源都来自自媒体聚合（头条/微信）")
+        lines.append("- 缺乏官方源（USDA / NOAA / 交易所 / 统计局）独立印证")
+        lines.append("- 建议：等 USDA WASDE 报告 / NOAA CPC 厄尔尼诺公报 / 交易所月报发布后再做决策")
+        lines.append("")
+    elif layering['core'] == [] and layering['observation'] == [] and layering['watchlist']:
         lines.append("## ⚠️ 重要警告：基本面已 PRICE IN")
         lines.append("")
         lines.append("**所有基本面 verified 涉及的品种，技术面均在末段/退潮期**。")

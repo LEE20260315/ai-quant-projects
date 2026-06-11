@@ -115,26 +115,9 @@ events:
     notes: 但 AG/AU 当前末段（30日已跌 14.6% / 9.4%），利好已兑现。
 
 # =============================================================================
-# 候选池（基于 7 候选结果）
-# 核心 (core) = 3 / 观察 (observation) = 4
+# 候选池：不再硬编码，由 cross_filter.py 根据双轨筛选结果动态生成。
+# (P0 升级：6/11 评估发现 yaml 硬编码 pool 与最新扫描结果矛盾 MA 启动期 vs 末段)
 # =============================================================================
-
-pool:
-  core:
-    - {symbol: BU, reason: "能源链 + bull_strong + 30日+10.7% + 60日+18.4%"}
-    - {symbol: CU, reason: "AI/产业升级 + ADX 38.2 主升期"}
-    - {symbol: MA, reason: "化工弹性 + 启动期 + 振幅 64%"}
-  observation:
-    - {symbol: NI, reason: "启动期 + ADX 30.8，新爆品候选"}
-    - {symbol: TA, reason: "化工跟随品种"}
-    - {symbol: RU, reason: "启动期 + bull_strong + 季节性共振"}
-    - {symbol: CF, reason: "启动期 + 新疆 7-8 月高温 + 9-10 月抢收行情"}
-  watchlist:
-    - {symbol: AG, reason: "末段，已爆过"}
-    - {symbol: AU, reason: "末段，已爆过"}
-    - {symbol: FU, reason: "末段，60日跌 7.5%"}
-    - {symbol: P,  reason: "末段，厄尔尼诺利好已兑现"}
-    - {symbol: SR, reason: "末段，无趋势"}
 
 # =============================================================================
 # 下一步：跑脚本自动出结果

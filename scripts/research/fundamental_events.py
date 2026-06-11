@@ -61,11 +61,16 @@ def get_source_tier(url: str, sources: dict) -> str:
         'czce.com.cn': 'official',
         'gfex.com.cn': 'official',
         'ine.cn': 'official',
+        'cffex.com.cn': 'official',
         'csrc.gov.cn': 'official',
         'stats.gov.cn': 'official',
         'moa.gov.cn': 'official',
         'customs.gov.cn': 'official',
+        'cma.gov.cn': 'official',
+        'cfachina.org': 'official',
         'usda.gov': 'official',
+        'noaa.gov': 'official',
+        'cpc.ncep.noaa.gov': 'official',
         'fao.org': 'official',
     }
     for domain, tier in domain_match.items():
@@ -106,9 +111,37 @@ def count_independent_sources(event: dict) -> int:
     return len(domains)
 
 
-def auto_verify(event: dict) -> bool:
-    """自动判定 verified：三源独立印证 → true。"""
-    return count_independent_sources(event) >= 3
+def auto_verify(event: dict, sources_cfg: dict = None) -> bool:
+    """自动判定 verified。
+
+    严格规则（P0 升级）：
+      - ≥3 独立域
+      - 至少 1 个 official 源
+      - tier 权重分 ≥ 4  (official=2 / medium=1 / blacklisted=-1 / unknown=0)
+    """
+    if sources_cfg is None:
+        sources_cfg = load_yaml(SOURCES_FILE)
+    domains = set()
+    has_official = False
+    tier_score = 0
+    for src in event.get('sources', []):
+        url = src.get('url', '') if isinstance(src, dict) else src
+        try:
+            d = urlparse(url).netloc
+        except Exception:
+            d = ''
+        if d:
+            domains.add(d)
+        tier = get_source_tier(url, sources_cfg)
+        if tier == 'official':
+            has_official = True
+            tier_score += 2
+        elif tier == 'medium':
+            tier_score += 1
+        elif tier == 'blacklisted':
+            tier_score -= 1
+        # unknown = 0
+    return len(domains) >= 3 and has_official and tier_score >= 4
 
 
 # ---------- 事件管理 ----------

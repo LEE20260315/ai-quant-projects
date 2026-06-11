@@ -60,10 +60,30 @@ official_sources:
     reliability: high
     covers: [C, M, Y, P, SR, CF, RM]
 
+  - name: "NOAA 美国海洋和大气管理局（厄尔尼诺/拉尼娜权威）"
+    url: "https://www.cpc.ncep.noaa.gov/"
+    reliability: high
+    covers: [C, M, Y, P, SR, CF, RM]  # 厄尔尼诺→全球粮油
+
+  - name: "中国气象局"
+    url: "http://www.cma.gov.cn/"
+    reliability: high
+    covers: [C, M, Y, P, SR, CF, CJ, AP]
+
   - name: "FAO 联合国粮农组织"
     url: "https://www.fao.org/"
     reliability: high
     covers: [C, M, Y, P, SR, CF, RM]
+
+  - name: "中金所 中国金融期货交易所"
+    url: "http://www.cffex.com.cn/"
+    reliability: high
+    covers: [ALL]  # 股指/国债，宏观信号
+
+  - name: "中国期货业协会"
+    url: "http://www.cfachina.org/"
+    reliability: high
+    covers: [ALL]  # 行业月报/数据
 
 # ---------- 🟡 行业付费类（中等可信，需交叉） ----------
 paid_sources:
