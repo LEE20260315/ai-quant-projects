@@ -74,10 +74,65 @@
       "drawdown": 4.93,
       "return_pct": -1.03,
       "positions": 2
+    },
+    {
+      "date": "2026-06-12",
+      "capital": 9507.42,
+      "total_equity": 9507.42,
+      "unrealized_pnl": 0,
+      "drawdown": 4.93,
+      "return_pct": -4.93,
+      "positions": 2
     }
   ],
   "start_date": "2026-04-23",
   "version": "v1.2",
-  "pending_orders": [],
+  "pending_orders": [
+    {
+      "symbol": "M",
+      "direction": 1,
+      "signal_date": "2026-06-12",
+      "signal_price": "2939",
+      "limit_price": 2947.82,
+      "next_open": "09:00:00",
+      "atr": 31.142857142857142,
+      "entry_type": "revert",
+      "fusion": "no_path1_signal",
+      "fused_signal": true,
+      "status": "pending",
+      "created_ts": "2026-06-12T15:30:37.122946",
+      "ctp_order_id": ""
+    },
+    {
+      "symbol": "Y",
+      "direction": 1,
+      "signal_date": "2026-06-12",
+      "signal_price": "8361",
+      "limit_price": 8386.08,
+      "next_open": "09:00:00",
+      "atr": 84.85714285714286,
+      "entry_type": "revert",
+      "fusion": "no_path1_signal",
+      "fused_signal": true,
+      "status": "pending",
+      "created_ts": "2026-06-12T15:30:37.152311",
+      "ctp_order_id": ""
+    },
+    {
+      "symbol": "P",
+      "direction": 1,
+      "signal_date": "2026-06-12",
+      "signal_price": "9393",
+      "limit_price": 9421.18,
+      "next_open": "09:00:00",
+      "atr": 152.28571428571428,
+      "entry_type": "revert",
+      "fusion": "no_path1_signal",
+      "fused_signal": true,
+      "status": "pending",
+      "created_ts": "2026-06-12T15:30:37.178307",
+      "ctp_order_id": ""
+    }
+  ],
   "locked": false
 }

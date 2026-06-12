@@ -1110,3 +1110,120 @@ SignalFusion: 预计算完成
 [5/5] 发送日报邮件
 [MAIL] OK: sent to 78644612@qq.com
 [周四 2026/06/11 21:00:25.29] Daily tracking completed. 
+[周五 2026/06/12 15:30:02.04] Starting daily tracking... 
+DingTalkNotifier: 未配置 webhook, 调用 send 将只记录日志.
+BarkNotifier: 未配置 BARK_KEY, 调用 send 将只记录日志.
+Exception in thread Thread-2 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Python314\Lib\threading.py", line 1024, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\subprocess.py", line 1613, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+UnicodeDecodeError: 'gbk' codec can't decode byte 0x94 in position 248: illegal multibyte sequence
+
+============================================================
+实盘跟踪日报 | 2026-06-12 | v1.2
+============================================================
+
+[POOL] 活跃品种(POOL_FILE, 上限 5): ['C', 'M', 'Y', 'P']
+
+[1/5] 处理 T+1 限价单 (昨日挂的) ...
+
+[2/5] 更新日K数据...
+============================================================
+日K数据自动更新
+时间: 2026-06-12 15:30:28
+============================================================
+
+--- C (C) ---
+  [UPDATE] 新增3条 (06-09~06-11)
+
+--- M (M) ---
+  [UPDATE] 新增3条 (06-09~06-11)
+
+--- Y (Y) ---
+  [UPDATE] 新增3条 (06-09~06-11)
+
+--- P (P) ---
+  [UPDATE] 新增3条 (06-09~06-11)
+
+--- 更新汇总 ---
+  品种: 4个 | 更新: 4个 | 新增数据: 12条
+
+[2/5] 信号扫描与交易执行
+
+--- 账户状态 ---
+  当前资金: 9,507.42元
+  峰值资金: 10,000.00元
+  当前回撤: 4.9%
+  累计收益: -4.9%
+  持仓数量: 2
+  历史交易: 1笔
+
+--- 当前持仓 ---
+  MA: 多 | 入场价=2963 | 止损=2828 | 止盈=3233 | 持仓3天 | 融合=no_path1_signal
+  TA: 多 | 入场价=6242 | 止损=5896 | 止盈=6722 | 持仓2天 | 融合=no_path1_signal
+
+--- 信号扫描 ---
+SignalFusion: 预计算路径1策略指标...
+  C/deviation: 329行, 0个信号
+  C/mean_revert: 329行, 8个信号
+  C/volatility: 329行, 14个信号
+  M/deviation: 329行, 1个信号
+  M/mean_revert: 329行, 4个信号
+  M/volatility: 329行, 17个信号
+  Y/deviation: 329行, 0个信号
+  Y/mean_revert: 329行, 6个信号
+  Y/volatility: 329行, 10个信号
+  P/deviation: 329行, 1个信号
+  P/mean_revert: 329行, 5个信号
+  P/volatility: 329行, 4个信号
+SignalFusion: 预计算完成
+  C: [无信号] PctRank=0.40 | ATR=19
+  M: [新信号] 多 | 强度=0.88 | PctRank=0.12 | ATR=31 | 融合=no_path1_signal
+  [PENDING] M 多 | 信号价=2939 | 限价=2948 | 次日09:00:00挂单
+  Y: [新信号] 多 | 强度=0.93 | PctRank=0.07 | ATR=85 | 融合=no_path1_signal
+  [PENDING] Y 多 | 信号价=8361 | 限价=8386 | 次日09:00:00挂单
+  P: [新信号] 多 | 强度=0.90 | PctRank=0.10 | ATR=152 | 融合=no_path1_signal
+  [PENDING] P 多 | 信号价=9393 | 限价=9421 | 次日09:00:00挂单
+
+[3/5] 风控检查与自动执行
+  [GRN] 正常: 回撤4.9%<20%
+
+--- 权益汇总 ---
+  已实现资金: 9,507.42元
+  浮动盈亏:   +0.00元
+  账户权益:   9,507.42元
+  权益收益率: -4.93%
+
+--- 交易统计 ---
+  胜率: 0/1 (0%)
+  盈亏比: 0.00
+  期望/笔: -493元
+
+[4/5] 保存日报
+日报已保存: c:\Users\MR.Dong\OneDrive\My Project\ai-quant-projects-merged\path2_lightweight\tracking\daily_2026-06-12.json
+
+[5/5] 发送日报邮件
+[MAIL] OK: sent to 78644612@qq.com
+[周五 2026/06/12 15:30:38.30] Daily tracking completed. 
+[周五 2026/06/12 15:30:38.47] Starting weekly report... 
+============================================================
+Weekly Report Generator
+============================================================
+Traceback (most recent call last):
+  File "c:\Users\MR.Dong\OneDrive\My Project\ai-quant-projects-merged\path2_lightweight\weekly_report.py", line 232, in <module>
+    run_weekly_report()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\MR.Dong\OneDrive\My Project\ai-quant-projects-merged\path2_lightweight\weekly_report.py", line 207, in run_weekly_report
+    findings = generate_key_findings(state, week_dailies, week_trades)
+  File "c:\Users\MR.Dong\OneDrive\My Project\ai-quant-projects-merged\path2_lightweight\weekly_report.py", line 107, in generate_key_findings
+    week_trades = [t for t in trade_log if t.get('exit_date', '') >= daily_log[-7].get('date', '') if daily_log]
+                                                                     ~~~~~~~~~^^^^
+IndexError: list index out of range
+[周五 2026/06/12 15:30:38.47] Weekly report completed. 
