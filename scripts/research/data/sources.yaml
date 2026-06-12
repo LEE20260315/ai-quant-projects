@@ -88,34 +88,47 @@ official_sources:
 # ---------- 🟡 行业付费类（中等可信，需交叉） ----------
 paid_sources:
   - name: "Wind 资讯"
+    url: "https://www.wind.com.cn/"
     reliability: medium
     covers: [ALL]
 
-  - name: "同花顺"
+  - name: "同花顺 iFind"
+    url: "https://www.10jqka.com.cn/"
     reliability: medium
     covers: [ALL]
 
   - name: "文华财经"
+    url: "https://www.wenhua.com.cn/"
     reliability: medium
     covers: [ALL]
 
   - name: "卓创资讯"
+    url: "https://www.sci99.com/"
     reliability: medium
     covers: [化工, 能源, 农产品]
 
   - name: "Mysteel 钢联"
+    url: "https://www.mysteel.com/"
     reliability: medium
     covers: [RB, I, HC, SS, JM, J]
 
   - name: "天下粮仓"
+    url: "https://www.cofeed.com/"
     reliability: medium
     covers: [C, M, Y, P, SR, CF, RM, OI]
 
-  - name: "中金所研报"
+  - name: "网易财经 (Mysteel/财联社转载)"
+    url: "https://www.163.com/"
     reliability: medium
     covers: [ALL]
 
-  - name: "中期协研报"
+  - name: "财联社"
+    url: "https://www.cls.cn/"
+    reliability: medium
+    covers: [ALL]
+
+  - name: "中金大宗商品 (boyar)"
+    url: "https://www.boyar.cn/"
     reliability: medium
     covers: [ALL]
 

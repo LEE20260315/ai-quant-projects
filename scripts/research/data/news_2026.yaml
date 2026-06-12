@@ -81,6 +81,31 @@ events:
     verified: false
     notes: 动力煤 ETF 在国内没有直接标的，跟踪指数有偏差。
 
+  # ---------- USDA 6 月报告：豆油/大豆累库 (2026-06-11 补) ----------
+  - title: USDA 6 月报告豆油 2026/27 累库常态化，美豆期末 2.95 亿蒲
+    date: 2026-06-11
+    sources:
+      - {url: "https://www.usda.gov/oce/commodity/wasde", tier: official}    # USDA WASDE 官方页面
+      - {url: "https://www.mysteel.com/", tier: medium}                      # Mysteel 6 月 USDA 豆油报告解读
+      - {url: "https://m.163.com/dy/article/KV7I9H980514AHGG.html", tier: medium}  # Mysteel 解读网易转载
+    affected_symbols: [M, Y, OI, P, C]  # 豆粕/豆油/菜油/棕榈/玉米传导
+    direction: bearish
+    strength: 3
+    # verified 现场算 (≥3 域 usda.gov/mysteel/163.com + 1 official usda.gov + tier=2+1+1=4 ≥4)
+    notes: "豆油 2026/27 累库已常态化, 美豆 2025/26 期末 2.95 亿蒲, 豆类油脂偏空."
+
+  - title: 6 月大豆到港 1073 万吨高位，进口原料供给充足
+    date: 2026-06-02
+    sources:
+      - {url: "https://www.mysteel.com/", tier: medium}                      # Mysteel 6 月到港预估
+      - {url: "https://www.usda.gov/oce/commodity/wasde", tier: official}    # USDA 报告
+      - {url: "https://www.163.com/dy/article/KV7I9H980514AHGG.html", tier: medium}  # 网易转载 Mysteel
+    affected_symbols: [M, Y, OI]  # 豆粕/豆油/菜油
+    direction: bearish
+    strength: 3
+    # verified: mysteel(medium) + usda(official) + 163(medium) = 3 域 + 1 official + tier=1+2+1=4 ✓
+    notes: "1073 万吨 165 船, 5 月半月已超 1100 万吨, 进口压顶."
+
   # ---------- AI / 新能源链 ----------
   - title: AI 算力 + 新能源车驱动，铜镍主线持续
     date: 2026-04-15

@@ -1,9 +1,14 @@
 {
-  "updated": "2026-06-11T14:47:00",
+  "updated": "2026-06-12T14:40:53",
   "source": "scripts/research/cross_filter.py",
   "core": [],
   "observation": [],
-  "watchlist": [],
-  "candidates_count": 0,
-  "price_in_warning": false
+  "watchlist": [
+    "C",
+    "M",
+    "Y",
+    "P"
+  ],
+  "candidates_count": 4,
+  "price_in_warning": true
 }

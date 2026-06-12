@@ -20,6 +20,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 import yaml
 
@@ -76,6 +77,17 @@ def get_source_tier(url: str, sources: dict) -> str:
     for domain, tier in domain_match.items():
         if domain in url:
             return tier
+    # 中等源: 从 sources.yaml paid_sources 动态提取域 (避免再次硬编码)
+    medium_domains = set()
+    for entry in sources.get('paid_sources', []):
+        url_field = entry.get('url', '')
+        # 提取 host 部分 (去掉 http://, https://, www., 路径)
+        host = url_field.split('//', 1)[-1].split('/', 1)[0].replace('www.', '')
+        if host:
+            medium_domains.add(host)
+    for d in medium_domains:
+        if d and d in url:
+            return 'medium'
     return 'unknown'  # 默认未知，提示人工核实
 
 
